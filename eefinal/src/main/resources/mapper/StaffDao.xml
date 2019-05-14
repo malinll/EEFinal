@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.eefinal.dao.StaffDao">
+
+    <select id="queryStaffByNameAndPass" parameterType="com.project.eefinal.model.Staff" resultMap="StaffMap">
+        select * from T_STAFF where S_NAME=#{name} and S_PASS=#{pass}
+    </select>
+
+    <resultMap id="StaffMap" type="com.project.eefinal.model.Staff">
+        <id property="id" column="S_ID"/>
+        <result property="name" column="S_NAME"/>
+        <result property="pass" column="S_PASS"/>
+    </resultMap>
+</mapper>
