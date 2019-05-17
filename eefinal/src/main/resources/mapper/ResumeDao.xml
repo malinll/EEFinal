@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.ResumeDao">
+    <insert id="addResume" parameterType="com.project.eefinal.model.Resume">
+        insert into T_RESUME values(RES_SEQ.nextval,#{vid},#{name},#{gender},#{birth},#{nation},
+        #{nativePlace},#{phone},#{education},#{major},#{address},#{email},#{skills},#{assessment})
+    </insert>
+
+    <update id="updateResume">
+        update T_RESUME set RES_NAME=#{name},RES_GENDER=#{gender},RES_BIRTH=#{birth},RES_NATION=#{nation},
+        RES_NATIVE_PLACE=#{nativePlace},RES_PHONE=#{phone},RES_EDUCATION=#{education},RES_MAJOR=#{major},
+        RES_ADDRESS=#{address},RES_EMAIL=#{email},RES_SKILLS=#{skills},RES_ASSESSMENT=#{assessment}
+        where RES_ID=#{id}
+    </update>
+
+    <delete id="delResume" parameterType="integer">
+        delete from T_RESUME where RES_ID=#{id}
+    </delete>
+
+    <select id="queryResumes" parameterType="com.project.eefinal.model.Resume" resultMap="ResumeMap">
+        select * from T_RESUME
+        <where>
+            <if test="id!=null">
+                and  RES_ID=#{id}
+            </if>
+            <if test="vid!=null">
+                and  RES_VID=#{vid}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="ResumeMap" type="com.project.eefinal.model.Resume">
+        <id property="id" column="RES_ID"/>
+        <result property="vid" column="RES_VID"/>
+        <result property="name" column="RES_NAME"/>
+        <result property="gender" column="RES_GENDER"/>
+        <result property="birth" column="RES_BIRTH"/>
+        <result property="nation" column="RES_NATION"/>
+        <result property="nativePlace" column="RES_NATIVE_PLACE"/>
+        <result property="phone" column="RES_PHONE"/>
+        <result property="education" column="RES_EDUCATION"/>
+        <result property="major" column="RES_MAJOR"/>
+        <result property="address" column="RES_ADDRESS"/>
+        <result property="email" column="RES_EMAIL"/>
+        <result property="skills" column="RES_SKILLS"/>
+        <result property="assessment" column="RES_ASSESSMENT"/>
+    </resultMap>
+</mapper>

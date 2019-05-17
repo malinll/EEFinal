@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.InterviewDao">
+    <insert id="addInterview" parameterType="com.project.eefinal.model.Interview">
+        insert into T_INTERVIEW(I_ID,I_RESID,I_STATE,I_RID) values (I_SEQ.nextval,#{resid},#{state},#{rid})
+    </insert>
+
+    <update id="updateInterview" parameterType="com.project.eefinal.model.Interview">
+        update T_INTERVIEW set I_STATE=#{state}
+    </update>
+
+    <select id="queryInterviews" parameterType="com.project.eefinal.model.Interview" resultMap="InterviewMap">
+        select * from T_INTERVIEW
+        <where>
+            <if test="id!=null">
+                and  I_ID=#{id}
+            </if>
+            <if test="rid!=null">
+                and  I_RID=#{rid}
+            </if>
+            <if test="resid!=null">
+                and  I_RESID=#{resid}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="InterviewMap" type="com.project.eefinal.model.Interview">
+        <id property="id" column="I_ID"/>
+        <result property="resid" column="I_RESID"/>
+        <result property="state" column="I_STATE"/>
+        <result property="time" column="I_TIME"/>
+        <result property="site" column="I_SITE"/>
+        <result property="rid" column="I_RID"/>
+
+    </resultMap>
+</mapper>

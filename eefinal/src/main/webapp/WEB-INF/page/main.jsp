@@ -31,8 +31,10 @@
 </head>
 <body>
     <a href="toRecruit">招聘信息</a> |
+    <a href="javascript:void(0)">新增简历</a> |
     <a href="toCheckResume?vid=${sessionScope.visitor.id}">查看简历</a> |
-    <a href="javascript:void(0)">新增简历</a>
+    <a href="toMyPost?vid=${sessionScope.visitor.id}">我的投递</a>
+
     <hr/>
     <br/>
     <%--新增简历界面--%>

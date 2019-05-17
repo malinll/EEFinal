@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.RecruitmentDao">
+    <select id="queryRecruitment" parameterType="com.project.eefinal.model.Recruitment" resultMap="RecruitmentMap">
+        select * from T_RECRUITMENT
+        <where>
+            <if test="id!=null">
+                and  R_ID=#{id}
+            </if>
+            and  R_STATE=1
+        </where>
+    </select>
+
+    <resultMap id="RecruitmentMap" type="com.project.eefinal.model.Recruitment">
+        <id property="id" column="R_ID"/>
+        <result property="job" column="R_JOB"/>
+        <result property="company" column="R_COMPANY"/>
+        <result property="pay" column="R_PAY"/>
+        <result property="area" column="R_AREA"/>
+        <result property="description" column="R_DESCRIPTION"/>
+        <result property="quality" column="R_QUALITY"/>
+        <result property="state" column="R_STATE"/>
+    </resultMap>
+
+
+</mapper>

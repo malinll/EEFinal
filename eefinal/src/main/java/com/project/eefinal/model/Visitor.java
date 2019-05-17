@@ -2,15 +2,15 @@ package com.project.eefinal.model;
 
 import java.io.Serializable;
 
-public class Staff implements Serializable {
+public class Visitor implements Serializable {
     private Integer id;
     private String name;
     private String pass;
 
-    public Staff() {
+    public Visitor() {
     }
 
-    public Staff(String name, String pass) {
+    public Visitor(String name, String pass) {
         this.name = name;
         this.pass = pass;
     }

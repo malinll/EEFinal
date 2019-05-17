@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.VisitorDao">
+    <insert id="addVisitor" parameterType="com.project.eefinal.model.Visitor">
+        insert into T_VISITOR values(V_SEQ.nextval,#{name},#{pass})
+    </insert>
+
+    <select id="queryVisitor" parameterType="com.project.eefinal.model.Visitor" resultMap="VisitorMap">
+        select * from T_VISITOR
+        <where>
+            <if test="id!=null">
+                and  V_ID=#{id}
+            </if>
+            <if test="name!=null">
+                and  V_NAME=#{name}
+            </if>
+            <if test="pass!=null">
+                and  V_PASS=#{pass}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="VisitorMap" type="com.project.eefinal.model.Visitor">
+        <id property="id" column="V_ID"/>
+        <result property="name" column="V_NAME"/>
+        <result property="pass" column="V_PASS"/>
+    </resultMap>
+</mapper>
