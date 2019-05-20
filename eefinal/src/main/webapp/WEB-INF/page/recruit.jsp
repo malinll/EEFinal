@@ -36,14 +36,13 @@
         <td><%=recruitment.getCompany()%></td>
         <td><%=recruitment.getArea()%></td>
         <td><%=recruitment.getPay()%></td>
-        <td><%=recruitment.getDesciption()%></td>
+        <td><%=recruitment.getDescription()%></td>
         <td><%=recruitment.getQuality()%></td>
         <td><a href="toPostResume?rid=<%=recruitment.getId()%>&vid=${sessionScope.visitor.id}">投递简历</a></td>
     </tr>
     <%
         }
     %>
-
 </table>
 </body>
 </html>

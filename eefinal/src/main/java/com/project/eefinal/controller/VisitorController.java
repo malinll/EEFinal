@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class VisitorController {
@@ -73,7 +74,6 @@ public class VisitorController {
 
     @RequestMapping("pr")
     public String postResume(Integer resid,Integer rid){
-
         Interview interview = new Interview();
         interview.setResid(resid);
         interview.setRid(rid);
@@ -81,4 +81,28 @@ public class VisitorController {
         interviewService.addInterview(interview);
         return "forward:toRecruit";
     }
+
+    @RequestMapping("confirmInterview")
+    public String confirmInterview(Integer iid){
+        Interview interview=new Interview();
+        interview.setId(iid);
+        List<Interview> interviews = interviewService.queryInterviews(interview);
+        Interview i = interviews.get(0);
+        i.setState(13);
+        interviewService.updateInterview(i);
+        return "forward:toMyPost";
+    }
+
+    @RequestMapping("cancelInterview")
+    public String cancelInterview(Integer iid){
+        Interview interview=new Interview();
+        interview.setId(iid);
+        List<Interview> interviews = interviewService.queryInterviews(interview);
+        Interview i = interviews.get(0);
+        i.setState(14);
+        interviewService.updateInterview(i);
+        return "forward:toMyPost";
+    }
+
+
 }

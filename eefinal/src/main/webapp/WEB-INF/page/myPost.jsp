@@ -23,7 +23,7 @@
             <tr>
                 <th>投递公司</th>
                 <th>投递职位</th>
-                <th>投递状态</th>
+                <th>投递状态/操作</th>
             </tr>
             <c:forEach items="${requestScope.interviews}" var="interview" varStatus="s">
                 <tr>
@@ -37,10 +37,21 @@
                             <c:when test="${interview.getState()==1}">
                                 <c:out value="被查看"/>
                             </c:when>
-                            <c:when test="${interview.getState()==2}">
+                            <c:when test="${interview.getState()==11}">
                                 <c:out value="邀面试"/>
+                                <a href="confirmInterview?iid=${interview.id}">确认</a>
+                                <a href="cancelInterview?iid=${interview.id}">取消</a>
                             </c:when>
-                            <c:when test="${interview.getState()==3}">
+                            <c:when test="${interview.getState()==13}">
+                                <c:out value="已确认"/>
+                            </c:when>
+                            <c:when test="${interview.getState()==14}">
+                                <c:out value="已取消"/>
+                            </c:when>
+                            <c:when test="${interview.getState()==15}">
+                                <c:out value="已录用"/>
+                            </c:when>
+                            <c:when test="${interview.getState()==2||interview.getState()==12}">
                                 <c:out value="不合适"/>
                             </c:when>
                         </c:choose>

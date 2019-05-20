@@ -65,11 +65,11 @@ public class Recruitment implements Serializable {
         this.area = area;
     }
 
-    public String getDesciption() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDesciption(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

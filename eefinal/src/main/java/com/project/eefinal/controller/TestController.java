@@ -1,11 +1,7 @@
 package com.project.eefinal.controller;
 
-import com.project.eefinal.model.Interview;
-import com.project.eefinal.model.Recruitment;
-import com.project.eefinal.model.Resume;
-import com.project.eefinal.service.InterviewService;
-import com.project.eefinal.service.RecruitmentService;
-import com.project.eefinal.service.ResumeService;
+import com.project.eefinal.model.*;
+import com.project.eefinal.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,6 +19,12 @@ public class TestController {
     private RecruitmentService recruitmentService;
     @Resource
     private InterviewService interviewService;
+    @Resource
+    private DepartmentService departmentService;
+    @Resource
+    private PostService postService;
+    @Resource
+    private StaffService staffService;
 
     @RequestMapping("/index")
     public String index(){
@@ -95,6 +97,70 @@ public class TestController {
         request.setAttribute("interviews",interviews);
         request.setAttribute("recruitments",recruitments);
         return "myPost";
+    }
+
+    @RequestMapping("toAdminMain")
+    public String toAdminMain(HttpServletRequest request){
+        Resume resume=new Resume();
+        Interview interview=new Interview();
+        Recruitment recruitment=new Recruitment();
+        List<Resume> resumes = resumeService.queryResumes(resume);
+        List<Integer> resids=new ArrayList<>();
+        List<Interview> interviews=new ArrayList<>();
+        List<Recruitment> recruitments=new ArrayList<>();
+        for (Resume r : resumes) {
+            resids.add(r.getId());
+        }
+        for (Integer resid : resids) {
+            interview.setResid(resid);
+            List<Interview> iv = interviewService.queryInterviews(interview);
+            if(!iv.isEmpty()){
+                interviews.addAll(iv);
+            }
+        }
+        for (Interview i : interviews) {
+            recruitment.setId(i.getRid());
+            List<Recruitment> r = recruitmentService.queryRecruitment(recruitment);
+            if(!r.isEmpty()){
+                recruitments.addAll(r);
+            }
+        }
+        request.setAttribute("resumes",resumes);
+        request.setAttribute("interviews",interviews);
+        request.setAttribute("recruitments",recruitments);
+        List<Department> departments = departmentService.queryDepartments(new Department());
+        Post post=new Post();
+        post.setDid(departments.get(0).getId());
+        List<Post> posts = postService.queryPosts(post);
+        request.setAttribute("departments",departments);
+        request.setAttribute("posts",posts);
+        return "adminMain";
+    }
+
+    @RequestMapping("toAdminDep")
+    public String toAdminDep(HttpServletRequest request){
+        List<Department> departments = departmentService.queryDepartments(new Department());
+        Post post=new Post();
+        post.setDid(departments.get(0).getId());
+        List<Post> posts = postService.queryPosts(post);
+        request.setAttribute("departments",departments);
+        request.setAttribute("posts",posts);
+        return "adminDep";
+    }
+
+    @RequestMapping("toStaffMain")
+    public String toStaffMain(HttpServletRequest request){
+        List<Department> departments = departmentService.queryDepartments(new Department());
+        Post post=new Post();
+        post.setDid(departments.get(0).getId());
+        List<Post> posts = postService.queryPosts(post);
+        Staff staff=new Staff();
+        staff.setPid(posts.get(0).getId());
+        List<Staff> staffs=staffService.queryStaffs(staff);
+        request.setAttribute("departments",departments);
+        request.setAttribute("posts",posts);
+        request.setAttribute("staffs",staffs);
+        return "staffMain";
     }
 
     @RequestMapping("/login")

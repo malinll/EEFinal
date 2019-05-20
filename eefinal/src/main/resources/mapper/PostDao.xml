@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.PostDao">
+    <insert id="addPost" parameterType="com.project.eefinal.model.Post">
+        insert into T_POST values (P_SEQ.nextval,#{name},#{did})
+    </insert>
+
+    <update id="updatePost" parameterType="com.project.eefinal.model.Post">
+        update T_POST set P_NAME=#{name} where P_ID=#{id}
+    </update>
+
+    <delete id="delPost" parameterType="integer">
+        delete from T_POST where P_ID=#{id}
+    </delete>
+
+    <select id="queryPosts" parameterType="com.project.eefinal.model.Post" resultMap="PostMap">
+        select * from T_POST
+        <where>
+            <if test="id!=null">
+                and P_ID=#{id}
+            </if>
+            <if test="did!=null">
+                and P_DID=#{did}
+            </if>
+        </where>
+    </select>
+
+
+    <resultMap id="PostMap" type="com.project.eefinal.model.Post">
+        <id property="id" column="P_ID"/>
+        <result property="name" column="P_NAME"/>
+        <result property="did" column="P_DID"/>
+    </resultMap>
+</mapper>

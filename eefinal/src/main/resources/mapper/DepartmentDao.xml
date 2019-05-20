@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.DepartmentDao">
+    <insert id="addDepartment" parameterType="com.project.eefinal.model.Department">
+        insert into T_DEPARTMENT values (D_SEQ.nextval,#{name},#{date})
+    </insert>
+
+    <update id="updateDepartment" parameterType="com.project.eefinal.model.Department">
+        update T_DEPARTMENT set D_NAME=#{name} where D_ID=#{id}
+    </update>
+
+    <delete id="delDepartment" parameterType="integer">
+        delete from T_DEPARTMENT where D_ID=#{id}
+    </delete>
+
+    <select id="queryDepartments" parameterType="com.project.eefinal.model.Department" resultMap="DepartmentMap">
+        select * from T_DEPARTMENT
+        <where>
+            <if test="id!=null">
+                and  D_ID=#{id}
+            </if>
+            <if test="name!=null">
+                and  D_NAME=#{name}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="DepartmentMap" type="com.project.eefinal.model.Department">
+        <id property="id" column="D_ID"/>
+        <result property="name" column="D_NAME"/>
+        <result property="date" column="D_TIME"/>
+    </resultMap>
+</mapper>

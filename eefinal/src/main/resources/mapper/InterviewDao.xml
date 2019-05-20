@@ -6,7 +6,7 @@
     </insert>
 
     <update id="updateInterview" parameterType="com.project.eefinal.model.Interview">
-        update T_INTERVIEW set I_STATE=#{state}
+        update T_INTERVIEW set I_STATE=#{state} where I_ID=#{id}
     </update>
 
     <select id="queryInterviews" parameterType="com.project.eefinal.model.Interview" resultMap="InterviewMap">

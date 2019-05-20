@@ -4,14 +4,49 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.eefinal.dao.StaffDao">
+    <update id="updateStaff" parameterType="com.project.eefinal.model.Staff">
+        update T_STAFF
+        <set>
+            <if test="pass!=null">
+                S_PASS=#{pass}
+            </if>
+            <if test="pid!=null">
+                ,S_PID=#{pid}
+            </if>
+            <if test="state!=null">
+                ,S_STATE={state}
+            </if>
+        </set>
+        where S_ID=#{id};
+    </update>
 
-    <select id="queryStaffByNameAndPass" parameterType="com.project.eefinal.model.Staff" resultMap="StaffMap">
-        select * from T_STAFF where S_NAME=#{name} and S_PASS=#{pass}
+    <select id="queryStaffs" parameterType="com.project.eefinal.model.Staff" resultMap="StaffMap">
+        select * from T_STAFF 
+        <where>
+            <if test="name!=null">
+                and S_NAME=#{name}
+            </if>
+            <if test="pass!=null">
+                and S_PASS=#{pass}
+            </if>
+            <if test="pid!=null">
+                and S_PID=#{pid}
+            </if>
+        </where> 
     </select>
 
     <resultMap id="StaffMap" type="com.project.eefinal.model.Staff">
         <id property="id" column="S_ID"/>
         <result property="name" column="S_NAME"/>
         <result property="pass" column="S_PASS"/>
+        <result property="pid" column="S_PID"/>
+        <result property="gender" column="S_GENDER"/>
+        <result property="birth" column="S_BIRTH"/>
+        <result property="nation" column="S_NATION"/>
+        <result property="nativePlace" column="S_NATIVE_PLACE"/>
+        <result property="phone" column="S_PHONE"/>
+        <result property="address" column="S_ADDRESS"/>
+        <result property="email" column="S_EMAIL"/>
+        <result property="state" column="S_STATE"/>
     </resultMap>
 </mapper>

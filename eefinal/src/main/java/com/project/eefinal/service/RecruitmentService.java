@@ -12,6 +12,10 @@ public class RecruitmentService {
     @Resource
     private RecruitmentDao recruitmentDao;
 
+    public boolean addRecruitment(Recruitment recruitment){
+        return recruitmentDao.addRecruitment(recruitment);
+    }
+
     public List<Recruitment> queryRecruitment(Recruitment recruitment){
         return recruitmentDao.queryRecruitment(recruitment);
     }
