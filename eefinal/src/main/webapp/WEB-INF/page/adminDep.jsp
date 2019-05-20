@@ -35,6 +35,55 @@
                     }
                 })
             })
+            $("#dep").change(function () {
+                $.get("queryPostsByDep",{"did":$(this).val()},function (obj) {
+                    $("#post option").remove();
+                    for(var i in obj){
+                        $("#post").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
+                    }
+                    $.get("queryStaffsByPost",{"pid":obj[0]['id']},function (o) {
+                        $("#staff option").remove();
+                        $("#state").empty();
+                        for(var i in o){
+                            $("#staff").append("<option value='"+o[i]['id']+"'>"+o[i]['name']+"</option>")
+                        }
+                        if(o[0]['state']==0){
+                            $("#state").text("试用");
+                        }else if(o[0]['state']==1){
+                            $("#state").text("在职");
+                        }else {
+                            $("#state").text("离职");
+                        }
+                    })
+                })
+            })
+            $("#post").change(function () {
+                $.get("queryStaffsByPost",{"pid":$(this).val()},function (obj) {
+                    $("#staff option").remove();
+                    $("#state").empty();
+                    for(var i in obj){
+                        $("#staff").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
+                    }
+                    if(obj[0]['state']==0){
+                        $("#state").text("试用");
+                    }else if(obj[0]['state']==1){
+                        $("#state").text("在职");
+                    }else {
+                        $("#state").text("离职");
+                    }
+                })
+            })
+            $("#staff").change(function () {
+                $.get("queryStaffById",{"id":$(this).val()},function (obj) {
+                    if(obj['state']==0){
+                        $("#state").text("试用");
+                    }else if(obj['state']==1){
+                        $("#state").text("在职");
+                    }else {
+                        $("#state").text("离职");
+                    }
+                })
+            })
         })
     </script>
 </head>
@@ -110,7 +159,43 @@
     </fieldset>
     <fieldset>
         <legend>更改员工状态</legend>
-
+        选择部门：
+        <select id="dep">
+            <c:forEach items="${requestScope.departments}" var="department">
+                <option value=${department.id}>${department.name}</option>
+            </c:forEach>
+        </select>
+        <br/>
+        选择职位：
+        <select id="post">
+            <c:forEach items="${requestScope.posts}" var="post">
+                <option value=${post.id}>${post.name}</option>
+            </c:forEach>
+        </select>
+        <br/>
+        查看员工：
+        <select id="staff">
+            <c:forEach items="${requestScope.staffs}" var="staff">
+                <option value=${staff.id}>${staff.name}</option>
+            </c:forEach>
+        </select>
+        <br/>
+        <p>
+            员工状态：
+            <span id="state">
+            <c:choose>
+                <c:when test="${requestScope.staffs[0].state}==0">
+                    试用
+                </c:when>
+                <c:when test="${requestScope.staffs[0].state}==1">
+                    在职
+                </c:when>
+                <c:when test="${requestScope.staffs[0].state}==2">
+                    离职
+                </c:when>
+            </c:choose>
+            </span>
+        </p>
     </fieldset>
 </body>
 </html>

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
   Created by IntelliJ IDEA.
   User: Matt
@@ -21,9 +22,49 @@
             $("#dep").change(function () {
                 $.get("queryPostsByDep",{"did":$(this).val()},function (obj) {
                     $("#post option").remove();
+                    $("#staff option").remove();
+                    $("#info").empty();
                     for(var i in obj){
                         $("#post").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
                     }
+                    $.get("queryStaffsByPost",{"pid":obj[0]['id']},function (o) {
+                        $("#staff option").remove();
+                        for(var i in o){
+                            $("#staff").append("<option value='"+o[i]['id']+"'>"+o[i]['name']+"</option>")
+                        }
+                        $("#info").append("<td>"+o[0]['name']+"</td>" +
+                            "<td>"+o[0]['gender']+"</td>" +
+                            "<td>"+o[0]['birth']+"</td>" +
+                            "<td>"+o[0]['address']+"</td>" +
+                            "<td>"+o[0]['phone']+"</td>" +
+                            "<td>"+o[0]['email']+"</td>");
+                    })
+                })
+            })
+            $("#post").change(function () {
+                $.get("queryStaffsByPost",{"pid":$(this).val()},function (obj) {
+                    $("#staff option").remove();
+                    $("#info").empty();
+                    for(var i in obj){
+                        $("#staff").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
+                    }
+                    $("#info").append("<td>"+obj[0]['name']+"</td>" +
+                        "<td>"+obj[0]['gender']+"</td>" +
+                        "<td>"+obj[0]['birth']+"</td>" +
+                        "<td>"+obj[0]['address']+"</td>" +
+                        "<td>"+obj[0]['phone']+"</td>" +
+                        "<td>"+obj[0]['email']+"</td>");
+                })
+            })
+            $("#staff").change(function () {
+                $.get("queryStaffById",{"id":$(this).val()},function (obj) {
+                    $("#info").empty();
+                    $("#info").append("<td>"+obj['name']+"</td>" +
+                        "<td>"+obj['gender']+"</td>" +
+                        "<td>"+obj['birth']+"</td>" +
+                        "<td>"+obj['address']+"</td>" +
+                        "<td>"+obj['phone']+"</td>" +
+                        "<td>"+obj['email']+"</td>");
                 })
             })
         })
@@ -55,6 +96,29 @@
                 <option value=${staff.id}>${staff.name}</option>
             </c:forEach>
         </select>
+    </fieldset>
+    <fieldset>
+        <legend>员工信息</legend>
+        <table>
+            <tr>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>生日</th>
+                <th>地址</th>
+                <th>手机</th>
+                <th>邮箱</th>
+            </tr>
+            <tr id="info">
+                <c:if test="${fn:length(requestScope.staffs)!=0}">
+                    <td>${requestScope.staffs[0]['name']}</td>
+                    <td>${requestScope.staffs[0]['gender']}</td>
+                    <td>${requestScope.staffs[0]['birth']}</td>
+                    <td>${requestScope.staffs[0]['address']}</td>
+                    <td>${requestScope.staffs[0]['phone']}</td>
+                    <td>${requestScope.staffs[0]['email']}</td>
+                </c:if>
+            </tr>
+        </table>
     </fieldset>
 </body>
 </html>

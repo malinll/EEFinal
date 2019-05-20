@@ -39,7 +39,7 @@
     <a href="javascript:void(0)">招聘相关</a> |
     <a href="toAdminDep">部门管理</a> |
     <a href="#">薪资结算</a> |
-    <a href="#">培训事宜</a> |
+    <a href="toTrain">培训事宜</a> |
     <a href="#">员工奖惩</a> |
     <a href="#">考勤统计</a>
     <hr/>

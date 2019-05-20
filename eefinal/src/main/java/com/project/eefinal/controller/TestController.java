@@ -25,6 +25,10 @@ public class TestController {
     private PostService postService;
     @Resource
     private StaffService staffService;
+    @Resource
+    private TrainService trainService;
+    @Resource
+    private TrainTargetService trainTargetService;
 
     @RequestMapping("/index")
     public String index(){
@@ -104,25 +108,19 @@ public class TestController {
         Resume resume=new Resume();
         Interview interview=new Interview();
         Recruitment recruitment=new Recruitment();
-        List<Resume> resumes = resumeService.queryResumes(resume);
-        List<Integer> resids=new ArrayList<>();
-        List<Interview> interviews=new ArrayList<>();
+        List<Interview> interviews=interviewService.queryInterviews(interview);
         List<Recruitment> recruitments=new ArrayList<>();
-        for (Resume r : resumes) {
-            resids.add(r.getId());
-        }
-        for (Integer resid : resids) {
-            interview.setResid(resid);
-            List<Interview> iv = interviewService.queryInterviews(interview);
-            if(!iv.isEmpty()){
-                interviews.addAll(iv);
-            }
-        }
+        List<Resume> resumes=new ArrayList<>();
         for (Interview i : interviews) {
             recruitment.setId(i.getRid());
             List<Recruitment> r = recruitmentService.queryRecruitment(recruitment);
             if(!r.isEmpty()){
                 recruitments.addAll(r);
+            }
+            resume.setId(i.getResid());
+            List<Resume> res = resumeService.queryResumes(resume);
+            if(!res.isEmpty()){
+                resumes.addAll(res);
             }
         }
         request.setAttribute("resumes",resumes);
@@ -163,6 +161,29 @@ public class TestController {
         return "staffMain";
     }
 
+    @RequestMapping("toTrain")
+    public String toTrain(HttpServletRequest request){
+        List<Staff> staffs = staffService.queryStaffs(new Staff());
+        request.setAttribute("staffs",staffs);
+        List<Train> trains = trainService.queryTrains(new Train());
+        request.setAttribute("trains",trains);
+        TrainTarget trainTarget=new TrainTarget();
+        List<List<TrainTarget>> trainTargets=new ArrayList<>();
+        List<Staff> tt=new ArrayList<>();
+        Staff staff=new Staff();
+        for (Train train : trains) {
+            trainTarget.setTrid(train.getId());
+            trainTargets.add(trainTargetService.queryTrainTarget(trainTarget));
+        }
+        for (List<TrainTarget> targets : trainTargets) {
+            for (TrainTarget target : targets) {
+                staff.setId(target.getSid());
+
+            }
+        }
+        request.setAttribute("tt",tt);
+        return "train";
+    }
     @RequestMapping("/login")
     public String login(String rank){
         if("visitor".equals(rank)){

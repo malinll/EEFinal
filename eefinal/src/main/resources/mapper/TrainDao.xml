@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.TrainDao">
+    <insert id="addTrain" parameterType="com.project.eefinal.model.Train">
+        insert into T_TRAIN values (TR_SEQ.nextval,#{time},#{title},#{content},#{site},#{state})
+    </insert>
+
+    <update id="updateTrain" parameterType="com.project.eefinal.model.Train">
+        update T_TRAIN set TR_TIME=#{time},TR_TITLE=#{title},TR_CONTENT=#{content},TR_SITE=#{site},TR_STATE=#{state}
+    </update>
+
+    <delete id="delTrain" parameterType="integer">
+        delete from T_TRAIN where TR_ID=#{id}
+    </delete>
+
+    <select id="queryTrains" parameterType="com.project.eefinal.model.Train" resultMap="TrainMap">
+        select * from T_TRAIN
+        <where>
+            <if test="id!=null">
+                and TR_ID=#{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="lastInsertId" resultType="java.lang.Integer">
+        select TR_SEQ.currval from dual
+    </select>
+
+
+    <resultMap id="TrainMap" type="com.project.eefinal.model.Train">
+        <id property="id" column="TR_ID"/>
+        <result property="title" column="TR_TITLE"/>
+        <result property="content" column="TR_CONTENT"/>
+        <result property="time" column="TR_TIME"/>
+        <result property="site" column="TR_SITE"/>
+        <result property="state" column="TR_STATE"/>
+    </resultMap>
+
+</mapper>

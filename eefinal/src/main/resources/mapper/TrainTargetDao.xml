@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.TrainTargetDao">
+    <insert id="addTrainTarget" parameterType="com.project.eefinal.model.TrainTarget">
+        insert into T_TRAIN_TARGET values (TT_SEQ.nextval,#{trid},#{sid})
+    </insert>
+
+    <select id="queryTrainTarget" parameterType="com.project.eefinal.model.TrainTarget" resultMap="TargetMap">
+        select * from T_TRAIN_TARGET
+        <where>
+            <if test="id!=null">
+                TT_ID=#{id}
+            </if>
+            <if test="sid!=null">
+                and TT_SID=#{sid}
+            </if>
+            <if test="trid!=null">
+                and TT_TRID=#{trid}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="TargetMap" type="com.project.eefinal.model.TrainTarget">
+        <id property="id" column="TT_ID"/>
+        <result property="sid" column="TT_SID"/>
+        <result property="trid" column="TT_TRID"/>
+    </resultMap>
+</mapper>

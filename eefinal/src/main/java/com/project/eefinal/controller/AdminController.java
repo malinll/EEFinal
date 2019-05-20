@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,10 @@ public class AdminController {
     private DepartmentService departmentService;
     @Resource
     private PostService postService;
+    @Resource
+    private TrainService trainService;
+    @Resource
+    private TrainTargetService trainTargetService;
 
     @RequestMapping("adminLogin")
     public String adminLogin(String name, String pass, HttpServletRequest request){
@@ -156,5 +162,29 @@ public class AdminController {
         recruitment.setState(0);
         recruitmentService.addRecruitment(recruitment);
         return "forward:toAdminMain";
+    }
+
+    @RequestMapping("addTrain")
+    public String addTrain(Train train,Integer[] staff){
+        train.setState(1);
+        trainService.addTrain(train);
+        Integer trid = trainService.lastInsertId();
+        TrainTarget trainTarget=new TrainTarget();
+        trainTarget.setTrid(trid);
+        for (int i = 0; i < staff.length; i++) {
+            trainTarget.setSid(staff[i]);
+            trainTargetService.addTrainTarget(trainTarget);
+        }
+        return "forward:toTrain";
+    }
+
+    @RequestMapping("trainDraft")
+    public String trainDraft(Train train,Integer[] staff){
+        train.setState(0);
+        trainService.addTrain(train);
+        for (int i = 0; i < staff.length; i++) {
+
+        }
+        return "forward:toTrain";
     }
 }

@@ -23,6 +23,9 @@
     <select id="queryStaffs" parameterType="com.project.eefinal.model.Staff" resultMap="StaffMap">
         select * from T_STAFF 
         <where>
+            <if test="id!=null">
+                and S_ID=#{id}
+            </if>
             <if test="name!=null">
                 and S_NAME=#{name}
             </if>

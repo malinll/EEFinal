@@ -23,7 +23,7 @@
     <script src="js/jquery-3.1.0.js"></script>
     <script>
         $(function () {
-            $("a:eq(2)").click(function () {
+            $("a:eq(1)").click(function () {
                 $("#ar").css("display","block");
             })
         })
