@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.RewardPunishmentDao">
+    <insert id="addRewardPunishment" parameterType="com.project.eefinal.model.RewardsPunishment">
+        insert into T_REWARDS_PUNISHMENT(RP_ID,RP_SID,RP_TIME,RP_MONEY,RP_STATE,RP_REASON)
+        values (RP_SEQ.nextval,#{sid},#{time},#{money},#{state},#{reason})
+    </insert>
+    <select id="queryRewardPunishment" parameterType="com.project.eefinal.model.RewardsPunishment" resultMap="RPMap">
+        select * from T_REWARDS_PUNISHMENT
+        <where>
+            <if test="id!=null">
+                RP_ID=#{id}
+            </if>
+            <if test="sid!=null">
+                RP_SID=#{sid}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="RPMap" type="com.project.eefinal.model.RewardsPunishment">
+        <id property="id" column="RP_ID"/>
+        <result property="sid" column="RP_SID"/>
+        <result property="time" column="RP_TIME"/>
+        <result property="money" column="RP_MONEY"/>
+        <result property="state" column="RP_STATE"/>
+        <result property="reason" column="RP_REASON"/>
+</resultMap>
+</mapper>

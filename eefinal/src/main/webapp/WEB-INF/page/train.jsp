@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: Matt
@@ -22,7 +23,7 @@
         <form action="addTrain" method="post">
             培训主题：<input name="title"/>
             培训内容：<input name="content"/>
-            培训时间：<input type="datetime-local" name="time"/>
+            培训时间：<input type="datetime-local" name="datetime"/>
             培训地点：<input name="site"/>
             选择员工：
             <c:forEach items="${requestScope.staffs}" var="staff">
@@ -62,6 +63,50 @@
                             </c:forEach>
                         </td>
                     </tr>
+                </c:if>
+            </c:forEach>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>查看草稿箱</legend>
+        <table>
+            <tr>
+                <th>培训主题</th>
+                <th>培训内容</th>
+                <th>培训时间</th>
+                <th>培训地点</th>
+                <th>培训人员</th>
+            </tr>
+            <c:forEach items="${requestScope.trains}" var="train" varStatus="i">
+                <c:if test="${train.state==0}">
+                    <form action="updateTrain" method="post">
+                        <tr>
+                            <td><input name="title" value="${train.title}"></td>
+                            <td><input name="content" value="${train.content}"></td>
+                            <td><input type="datetime-local" name="time" value="${train.time}"></td>
+                            <td><input name="site" value="${train.site}"></td>
+                            <td>
+                                <c:forEach items="${requestScope.staffs}" var="staff" varStatus="j">
+                                    <%--<c:if test="${requestScope.tt[i.index][j.index].id==staff.id}">
+                                        <input type="checkbox" name="staff" value="${staff.id}" checked>${staff.name}
+                                    </c:if>--%>
+                                    <%--<c:if test="${requestScope.tt[i.index][j.index].id!=staff.id}">
+                                        <input type="checkbox" name="staff" value="${staff.id}">${staff.name}
+                                    </c:if>--%>
+                                    <input type="checkbox" name="staff" value="${staff.id}"
+                                    <c:if test="${requestScope.tt[i.index][j.index].id==staff.id}">
+                                        checked
+                                    </c:if>
+                                    >${staff.name}
+                                </c:forEach>
+                            </td>
+                            <td>
+                                <input type="hidden" name="id" value="${train.id}">
+                                <input type="submit" value="正式发布">
+                            </td>
+                        </tr>
+                    </form>
                 </c:if>
             </c:forEach>
         </table>

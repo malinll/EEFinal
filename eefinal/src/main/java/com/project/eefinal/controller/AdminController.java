@@ -165,7 +165,10 @@ public class AdminController {
     }
 
     @RequestMapping("addTrain")
-    public String addTrain(Train train,Integer[] staff){
+    public String addTrain(Train train,Integer[] staff,String datetime) throws ParseException {
+        Date time = new SimpleDateFormat("yyyy-MM-ddTHH:mm").parse(datetime);
+        train.setState(0);
+        train.setTime(time);
         train.setState(1);
         trainService.addTrain(train);
         Integer trid = trainService.lastInsertId();
@@ -178,12 +181,39 @@ public class AdminController {
         return "forward:toTrain";
     }
 
-    @RequestMapping("trainDraft")
-    public String trainDraft(Train train,Integer[] staff){
+    @RequestMapping("updateTrain")
+    public String updateTrain(Train train,Integer[] staff,String datetime) throws ParseException {
+        Date time = new SimpleDateFormat("yyyy-MM-ddTHH:mm").parse(datetime);
         train.setState(0);
-        trainService.addTrain(train);
+        train.setTime(time);
+        train.setState(1);
+        trainService.updateTrain(train);
+        Integer trid = train.getId();
+        TrainTarget trainTarget =new TrainTarget();
+        trainTarget.setTrid(trid);
+        trainTargetService.delTrainTarget(trainTarget);
         for (int i = 0; i < staff.length; i++) {
+            trainTarget.setSid(staff[i]);
+            trainTargetService.addTrainTarget(trainTarget);
+        }
+        return "forward:toTrain";
+    }
 
+
+
+    @RequestMapping("trainDraft")
+    public String trainDraft(Train train,Integer[] staff,String datetime) throws ParseException {
+        System.out.println(datetime);
+        Date time = new SimpleDateFormat("yyyy-MM-ddTHH:mm").parse(datetime);
+        train.setState(0);
+        train.setTime(time);
+        trainService.addTrain(train);
+        Integer trid = trainService.lastInsertId();
+        TrainTarget trainTarget=new TrainTarget();
+        trainTarget.setTrid(trid);
+        for (int i = 0; i < staff.length; i++) {
+            trainTarget.setSid(staff[i]);
+            trainTargetService.addTrainTarget(trainTarget);
         }
         return "forward:toTrain";
     }

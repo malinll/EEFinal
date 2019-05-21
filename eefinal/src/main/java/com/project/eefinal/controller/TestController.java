@@ -197,12 +197,16 @@ public class TestController {
         Clock clock = new Clock();
         clock.setSid(sid);
         List<Clock> clocks = clockService.queryClock(clock);
+        Calendar cal=Calendar.getInstance();
         for (Clock c : clocks) {
-            if (c.getTime().getDate()== new Date().getDate() &&
-                    c.getTime().getMonth()==new Date().getMonth() &&
-                    c.getTime().getHours()<=12){
-                request.setAttribute("to",c.getTime());
-                break;
+            cal.setTime(c.getTime());
+            if (cal.get(Calendar.DATE)== Calendar.getInstance().get(Calendar.DATE) &&
+                    cal.get(Calendar.MONTH)==Calendar.getInstance().get(Calendar.MONTH)){
+                if (c.getState()==1){
+                    request.setAttribute("to",c);
+                }else {
+                    request.setAttribute("off",c);
+                }
             }
         }
         return "clock";

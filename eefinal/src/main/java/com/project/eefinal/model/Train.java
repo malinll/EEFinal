@@ -1,8 +1,10 @@
 package com.project.eefinal.model;
 
+import java.util.Date;
+
 public class Train {
     private Integer id;
-    private String time;
+    private Date time;
     private String title;
     private String content;
     private String site;
@@ -19,11 +21,11 @@ public class Train {
         this.id = id;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

@@ -16,6 +16,10 @@ public class TrainTargetService {
         return trainTargetDao.addTrainTarget(trainTarget);
     }
 
+    public boolean delTrainTarget(TrainTarget trainTarget){
+        return trainTargetDao.delTrainTarget(trainTarget);
+    }
+
     public List<TrainTarget> queryTrainTarget(TrainTarget trainTarget){
         return trainTargetDao.queryTrainTarget(trainTarget);
     }

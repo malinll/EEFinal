@@ -6,7 +6,7 @@
     </insert>
 
     <update id="updateTrain" parameterType="com.project.eefinal.model.Train">
-        update T_TRAIN set TR_TIME=#{time},TR_TITLE=#{title},TR_CONTENT=#{content},TR_SITE=#{site},TR_STATE=#{state}
+        update T_TRAIN set TR_TIME=#{time},TR_TITLE=#{title},TR_CONTENT=#{content},TR_SITE=#{site},TR_STATE=#{state} where TR_ID=#{id}
     </update>
 
     <delete id="delTrain" parameterType="integer">

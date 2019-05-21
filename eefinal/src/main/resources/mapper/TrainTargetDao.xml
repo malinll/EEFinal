@@ -5,6 +5,18 @@
         insert into T_TRAIN_TARGET values (TT_SEQ.nextval,#{trid},#{sid})
     </insert>
 
+    <delete id="delTrainTarget" parameterType="com.project.eefinal.model.TrainTarget">
+        delete from T_TRAIN_TARGET
+        <where>
+            <if test="id!=null">
+                TT_ID=#{id}
+            </if>
+            <if test="trid!=null">
+                and TT_TRID=#{trid}
+            </if>
+        </where>
+    </delete>
+
     <select id="queryTrainTarget" parameterType="com.project.eefinal.model.TrainTarget" resultMap="TargetMap">
         select * from T_TRAIN_TARGET
         <where>

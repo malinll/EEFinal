@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.eefinal.dao.ClockDao">
+    <insert id="addClock" parameterType="com.project.eefinal.model.Clock">
+        insert into T_CLOCK values (C_SEQ.nextval,#{sid},#{time},#{state},#{loe})
+    </insert>
+
+    <select id="queryClock" parameterType="com.project.eefinal.model.Clock" resultMap="ClockMap">
+        select * from T_CLOCK
+        <where>
+            <if test="id!=null">
+                and C_ID=#{id}
+            </if>
+            <if test="id!=null">
+                and C_SID=#{sid}
+            </if>
+            <if test="loe!=null">
+                and C_LOE=#{loe}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="ClockMap" type="com.project.eefinal.model.Clock">
+        <id property="id" column="C_ID"/>
+        <result property="sid" column="C_SID"/>
+        <result property="time" column="C_TIME"/>
+        <result property="state" column="C_STATE"/>
+        <result property="loe" column="C_LOE"/>
+    </resultMap>
+
+
+
+</mapper>

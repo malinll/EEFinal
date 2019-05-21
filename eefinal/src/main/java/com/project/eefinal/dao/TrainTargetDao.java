@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface TrainTargetDao {
     boolean addTrainTarget(TrainTarget trainTarget);
+    boolean delTrainTarget(TrainTarget trainTarget);
     List<TrainTarget> queryTrainTarget(TrainTarget trainTarget);
 }

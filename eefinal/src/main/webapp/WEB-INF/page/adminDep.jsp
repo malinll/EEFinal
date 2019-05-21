@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: Matt
@@ -113,7 +114,7 @@
                     <form action="updateDep" method="post">
                         <td>${department.id}</td>
                         <td><input name="name" value=${department.name}></td>
-                        <td>${department.date}</td>
+                        <td><fmt:formatDate value="${department.date}" pattern="yyyy年MM月dd日 HH:mm:ss"/></td>
                         <td>
                             <input type="hidden" name="id" value=${department.id}>
                             <input type="submit" value="修改部门名称">
