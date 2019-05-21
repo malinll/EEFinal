@@ -72,10 +72,16 @@
 </head>
 <body>
     <a href="javascript:void(0)">个人信息</a> |
-    <a href="#">通讯录</a> |
+    <a href="javascript:void(0)">通讯录</a> |
     <a href="#">查看消息</a> |
-    <a href="#">考勤打卡</a>
-
+    <a href="toClock?sid=${sessionScope.staff.id}">考勤打卡</a>
+    <div id="time" style="float: right">
+        当前时间：
+        <script>
+            document.getElementById('time').innerHTML=new Date().toLocaleString()+' 星期'+'日一二三四五六'.charAt(new Date().getDay());
+            setInterval("document.getElementById('time').innerHTML=new Date().toLocaleString()+' 星期'+'日一二三四五六'.charAt(new Date().getDay());",1000);
+        </script>
+    </div>
     <fieldset>
         <legend>通讯录</legend>
         选择部门：

@@ -9,6 +9,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -29,6 +31,8 @@ public class TestController {
     private TrainService trainService;
     @Resource
     private TrainTargetService trainTargetService;
+    @Resource
+    private ClockService clockService;
 
     @RequestMapping("/index")
     public String index(){
@@ -169,21 +173,41 @@ public class TestController {
         request.setAttribute("trains",trains);
         TrainTarget trainTarget=new TrainTarget();
         List<List<TrainTarget>> trainTargets=new ArrayList<>();
-        List<Staff> tt=new ArrayList<>();
+        List<Staff> tt;
+        List<List<Staff>> tts=new ArrayList<>();
         Staff staff=new Staff();
         for (Train train : trains) {
             trainTarget.setTrid(train.getId());
             trainTargets.add(trainTargetService.queryTrainTarget(trainTarget));
         }
         for (List<TrainTarget> targets : trainTargets) {
+            tt=new ArrayList<>();
             for (TrainTarget target : targets) {
                 staff.setId(target.getSid());
-
+                tt.add(staffService.queryStaffs(staff).get(0));
             }
+            tts.add(tt);
         }
-        request.setAttribute("tt",tt);
+        request.setAttribute("tt",tts);
         return "train";
     }
+
+    @RequestMapping("toClock")
+    public String toClock(Integer sid,HttpServletRequest request){
+        Clock clock = new Clock();
+        clock.setSid(sid);
+        List<Clock> clocks = clockService.queryClock(clock);
+        for (Clock c : clocks) {
+            if (c.getTime().getDate()== new Date().getDate() &&
+                    c.getTime().getMonth()==new Date().getMonth() &&
+                    c.getTime().getHours()<=12){
+                request.setAttribute("to",c.getTime());
+                break;
+            }
+        }
+        return "clock";
+    }
+
     @RequestMapping("/login")
     public String login(String rank){
         if("visitor".equals(rank)){

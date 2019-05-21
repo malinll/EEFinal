@@ -50,17 +50,15 @@
                         <td>${train.time}</td>
                         <td>${train.site}</td>
                         <td>
-                            <c:forEach items="${requestScope.tt}" var="tt" varStatus="i">
-                                <c:if test="${train.id==requestScope.trainTargets[i.index].trid}">
-                                    <c:choose>
-                                        <c:when test="${i.index==0}">
-                                            ${tt.name}
-                                        </c:when>
-                                        <c:otherwise>
-                                            ,${tt.name}
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:if>
+                            <c:forEach items="${requestScope.tt[i.index]}" var="tt" varStatus="j">
+                                <c:choose>
+                                    <c:when test="${j.index==0}">
+                                        ${tt.name}
+                                    </c:when>
+                                    <c:otherwise>
+                                        ,${tt.name}
+                                    </c:otherwise>
+                                </c:choose>
                             </c:forEach>
                         </td>
                     </tr>
