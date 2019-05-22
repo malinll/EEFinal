@@ -23,7 +23,7 @@
         <form action="addTrain" method="post">
             培训主题：<input name="title"/>
             培训内容：<input name="content"/>
-            培训时间：<input type="datetime-local" name="datetime"/>
+            培训时间：<input type="datetime-local" name="time"/>
             培训地点：<input name="site"/>
             选择员工：
             <c:forEach items="${requestScope.staffs}" var="staff">

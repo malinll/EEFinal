@@ -138,8 +138,6 @@ public class AdminController {
         return "forward:toAdminDep";
     }
 
-
-
     @RequestMapping("queryPostsByDep")
     @ResponseBody
     public List<Post> queryPostsByDep(Integer did){
@@ -165,10 +163,7 @@ public class AdminController {
     }
 
     @RequestMapping("addTrain")
-    public String addTrain(Train train,Integer[] staff,String datetime) throws ParseException {
-        Date time = new SimpleDateFormat("yyyy-MM-ddTHH:mm").parse(datetime);
-        train.setState(0);
-        train.setTime(time);
+    public String addTrain(Train train,Integer[] staff) {
         train.setState(1);
         trainService.addTrain(train);
         Integer trid = trainService.lastInsertId();
@@ -182,10 +177,7 @@ public class AdminController {
     }
 
     @RequestMapping("updateTrain")
-    public String updateTrain(Train train,Integer[] staff,String datetime) throws ParseException {
-        Date time = new SimpleDateFormat("yyyy-MM-ddTHH:mm").parse(datetime);
-        train.setState(0);
-        train.setTime(time);
+    public String updateTrain(Train train,Integer[] staff) {
         train.setState(1);
         trainService.updateTrain(train);
         Integer trid = train.getId();
@@ -199,14 +191,9 @@ public class AdminController {
         return "forward:toTrain";
     }
 
-
-
     @RequestMapping("trainDraft")
-    public String trainDraft(Train train,Integer[] staff,String datetime) throws ParseException {
-        System.out.println(datetime);
-        Date time = new SimpleDateFormat("yyyy-MM-ddTHH:mm").parse(datetime);
+    public String trainDraft(Train train,Integer[] staff) {
         train.setState(0);
-        train.setTime(time);
         trainService.addTrain(train);
         Integer trid = trainService.lastInsertId();
         TrainTarget trainTarget=new TrainTarget();
