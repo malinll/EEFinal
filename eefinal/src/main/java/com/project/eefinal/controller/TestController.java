@@ -33,9 +33,13 @@ public class TestController {
     private TrainTargetService trainTargetService;
     @Resource
     private ClockService clockService;
+    @Resource
+    private RewardPunishmentService rewardPunishmentService;
 
-    @RequestMapping("/index")
-    public String index(){
+    @RequestMapping("/")
+    public String index(HttpServletRequest request){
+        List<Recruitment> recruitments = recruitmentService.queryRecruitment(new Recruitment());
+        request.setAttribute("recruitments",recruitments);
         return "index";
     }
 
@@ -47,6 +51,11 @@ public class TestController {
     @RequestMapping("/toRegister")
     public String toRegister(){
         return "register";
+    }
+
+    @RequestMapping("/toMain")
+    public String toMain(){
+        return "main";
     }
 
     @RequestMapping("toCheckResume")
@@ -210,6 +219,30 @@ public class TestController {
             }
         }
         return "clock";
+    }
+
+    @RequestMapping("toAdminPay")
+    public String toAdminPay(HttpServletRequest request){
+        RewardsPunishment rp=new RewardsPunishment();
+        int num;
+        List<Staff> staffs = staffService.queryStaffs(new Staff());
+        List<Integer> rps=new ArrayList<>();
+        for (Staff staff : staffs) {
+            num=0;
+            rp.setSid(staff.getId());
+            List<RewardsPunishment> rewardsPunishments = rewardPunishmentService.queryRewardPunishment(rp);
+            for (RewardsPunishment rewardsPunishment : rewardsPunishments) {
+                if(rewardsPunishment.getState()==1){
+                    num+=rewardsPunishment.getMoney();
+                }else {
+                    num-=rewardsPunishment.getMoney();
+                }
+            }
+            rps.add(num);
+        }
+        request.setAttribute("staffs",staffs);
+        request.setAttribute("rps",rps);
+        return "adminPay";
     }
 
     @RequestMapping("/login")

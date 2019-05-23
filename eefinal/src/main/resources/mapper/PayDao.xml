@@ -4,4 +4,17 @@
     <insert id="addPay" parameterType="com.project.eefinal.model.Pay">
 
     </insert>
+    <select id="queryPay" parameterType="com.project.eefinal.model.Pay" resultMap="PayMap">
+
+    </select>
+    <resultMap id="PayMap" type="com.project.eefinal.model.Pay">
+        <id property="id" column="PAY_ID"/>
+        <result property="sid" column="PAY_SID"/>
+        <result property="money" column="PAY_MONEY"/>
+        <result property="tax" column="PAY_TAX"/>
+        <result property="overtime" column="PAY_OVERTIME"/>
+        <result property="rp" column="PAY_RP"/>
+        <result property="time" column="PAY_TIME"/>
+        <result property="total" column="PAY_TOTAL"/>
+    </resultMap>
 </mapper>

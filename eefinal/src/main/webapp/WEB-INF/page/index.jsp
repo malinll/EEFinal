@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Matt
@@ -156,6 +157,36 @@
             padding: 0 14px;
             line-height: 50px;
         }
+        .position-list li .position{
+            float: left;
+            color: #3C99D8;
+            cursor: pointer;
+            font-size: 14px;
+            width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: PingFangSC-Regular;
+        }
+        .area{
+            font-style: normal;
+            float: right;
+            width: 70px;
+            text-align: right;
+            font-size: 14px;
+            color: rgba(31,56,88,0.60);
+        }
+        .money{
+            float: right;
+            font-style: normal;
+            font-size: 14px;
+            color: rgba(0,0,0,0.60);
+            margin-right: 70px;
+            width: 202px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -163,25 +194,40 @@
         <div class="head-main">
             <div class="head-menu">
                 <div class="login" style="opacity: 0.8;">
-                    欢迎来到阿里巴巴集团招聘！
-                    <a href="toLogin" target="_top">登录</a>&nbsp;|
-                    <a href="toRegister">注册</a>
+                    <c:choose>
+                        <c:when test="${sessionScope.visitor==null}">
+                            欢迎来到阿里巴巴集团招聘！
+
+                            <a href="toLogin" target="_top">登录</a>&nbsp;|
+                            <a href="toRegister">注册</a>
+                        </c:when>
+                        <c:otherwise>
+                            欢迎 ${sessionScope.visitor.name} 来到阿里巴巴集团招聘！
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <ul id="menu">
                     <li class="current-cat" value="1">
-                        <a href="#">首&nbsp;&nbsp;页</a>
+                        <a href="/">首&nbsp;&nbsp;页</a>
                     </li>
-                    <li><a href="#">社会招聘</a></li>
-                    <li><a href="#">了解公司</a></li>
-                    <li><a href="#">联系我们</a></li>
-                    <li><a href="#">个人中心</a></li>
+                    <li><a href="toRecruit">社会招聘</a></li>
+                    <li><a href="https://job.alibaba.com/zhaopin/about.htm?spm=a2obv.11410903.0.0.5af844f6A10LlV">了解公司</a></li>
+                    <li><a href="/">联系我们</a></li>
+                    <c:choose>
+                        <c:when test="${sessionScope.visitor==null}">
+                            <li><a href="toLogin">个人中心</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="toMain">个人中心</a></li>
+                        </c:otherwise>
+                    </c:choose>
                 </ul>
             </div>
-            <a href="#" class="logo" style="text-align:right;width: 125px;">
+            <a href="/" class="logo" style="text-align:right;width: 125px;">
                 <img src="https://img.alicdn.com/tfs/TB1Zv8_lxSYBuNjSspjXXX73VXa-390-63.png" height="20"/>
             </a>
             <i style="float:left;color:white;font-style:normal;font-size:20px;line-height:52px;margin: 0 10px;opacity: 0.8;">|</i>
-            <i style="float:left;color:white;font-style:normal;font-size:14px;line-height:54px;opacity: 0.8;">公司官网</i>
+            <i style="float:left;color:white;font-style:normal;font-size:14px;line-height:54px;opacity: 0.8;">招聘官网</i>
         </div>
     </div>
     <div class="index-main" style="position:relative;height:478px;width: 100%;overflow: hidden;">
@@ -200,11 +246,17 @@
         <div style="width:1180px;height:300px;margin:32px auto;">
             <div class="newPosition-list" style="width:850px;height:300px;">
                 <div class="more-position">
-                    最新职位
-                    <a href="#" class="clickMorePosition">更多</a>
+                    查看职位
+                    <a href="toRecruit" class="clickMorePosition">更多</a>
                 </div>
                 <ul class="position-list" style="position:absolute;z-index: 1;top: 50px;width: 100%;margin: 0;padding: 0;">
-
+                    <c:forEach items="${requestScope.recruitments}" var="recruitment">
+                        <li>
+                            <a href="toRecruit" class="position">${recruitment.job}-${recruitment.company}</a>
+                            <em class="area">地区：${recruitment.area}</em>
+                            <em class="money">薪资：${recruitment.pay}</em>
+                        </li>
+                    </c:forEach>
                 </ul>
             </div>
 

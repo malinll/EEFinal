@@ -15,6 +15,7 @@ public class Staff implements Serializable {
     private String address;
     private String email;
     private Integer state;
+    private Integer money;
 
     public Staff() {
     }
@@ -113,5 +114,13 @@ public class Staff implements Serializable {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Integer getMoney() {
+        return money;
+    }
+
+    public void setMoney(Integer money) {
+        this.money = money;
     }
 }

@@ -51,5 +51,6 @@
         <result property="address" column="S_ADDRESS"/>
         <result property="email" column="S_EMAIL"/>
         <result property="state" column="S_STATE"/>
+        <result property="money" column="S_MONEY"/>
     </resultMap>
 </mapper>

@@ -24,6 +24,7 @@
                 <th>投递公司</th>
                 <th>投递职位</th>
                 <th>投递状态/操作</th>
+                <th>备注</th>
             </tr>
             <c:forEach items="${requestScope.interviews}" var="interview" varStatus="s">
                 <tr>
@@ -53,6 +54,23 @@
                             </c:when>
                             <c:when test="${interview.getState()==2||interview.getState()==12}">
                                 <c:out value="不合适"/>
+                            </c:when>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${interview.getState()==11}">
+                                <c:out value="邀面试"/>
+                                时间：${interview.time}
+                                地点：${interview.site}
+                            </c:when>
+                            <c:when test="${interview.getState()==13}">
+                                <c:out value="已确认"/>
+                                时间：${interview.time}
+                                地点：${interview.site}
+                            </c:when>
+                            <c:when test="${interview.getState()==15}">
+                                <c:out value="已录用"/>
                             </c:when>
                         </c:choose>
                     </td>
