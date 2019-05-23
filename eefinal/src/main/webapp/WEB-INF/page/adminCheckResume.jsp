@@ -50,7 +50,12 @@
             <td colspan="2">个人评价：<textarea name="assessment" style="width: 75%;height: 100px;resize: none">${requestScope.resume.assessment}</textarea></td>
         </tr>
     </table>
-    <a href="inviteToInterview?iid=${requestScope.iid}">邀请面试</a>
+    <form action="inviteToInterview" method="post">
+        面试时间：<input type="datetime-local" name="time">
+        面试地点：<input name="site">
+        <input type="hidden" name="iid" value="${requestScope.iid}">
+        <input type="submit" value="邀请面试">
+    </form>
     <a href="resumeReject?iid=${requestScope.iid}">不予面试</a>
 </body>
 </html>

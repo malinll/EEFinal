@@ -30,6 +30,8 @@ public class AdminController {
     private TrainService trainService;
     @Resource
     private TrainTargetService trainTargetService;
+    @Resource
+    private StaffService staffService;
 
     @RequestMapping("adminLogin")
     public String adminLogin(String name, String pass, HttpServletRequest request){
@@ -56,12 +58,14 @@ public class AdminController {
     }
 
     @RequestMapping("inviteToInterview")
-    public String inviteToInterview(Integer iid){
+    public String inviteToInterview(Integer iid,String time,String site){
         Interview interview=new Interview();
         interview.setId(iid);
         List<Interview> interviews = interviewService.queryInterviews(interview);
         Interview i = interviews.get(0);
         i.setState(11);
+        i.setTime(time.replace("T"," "));
+        i.setSite(site);
         interviewService.updateInterview(i);
         return "forward:toAdminMain";
     }
@@ -89,13 +93,35 @@ public class AdminController {
     }
 
     @RequestMapping("hire")
-    public String hire(Integer iid){
+    public String hire(Integer iid,Integer resid,Integer rid){
         Interview interview=new Interview();
         interview.setId(iid);
         List<Interview> interviews = interviewService.queryInterviews(interview);
         Interview i = interviews.get(0);
         i.setState(15);
         interviewService.updateInterview(i);
+
+        Resume resume=new Resume();
+        resume.setId(resid);
+        Resume res = resumeService.queryResumes(resume).get(0);
+        Recruitment recruitment=new Recruitment();
+        recruitment.setId(rid);
+        Recruitment r = recruitmentService.queryRecruitment(recruitment).get(0);
+        Staff staff=new Staff();
+        staff.setPid(r.getPid());
+        staff.setName(res.getName());
+        staff.setPass(res.getPhone().toString());
+        staff.setGender(res.getGender());
+        staff.setBirth(res.getBirth());
+        staff.setNation(res.getNation());
+        staff.setNativePlace(res.getNativePlace());
+        staff.setPhone(res.getPhone());
+        staff.setAddress(res.getAddress());
+        staff.setEmail(res.getEmail());
+        staff.setState(0);
+        staff.setMoney(r.getPay());
+        staffService.addStaff(staff);
+
         return "forward:toAdminMain";
     }
 
@@ -114,8 +140,20 @@ public class AdminController {
 
     @RequestMapping("delDep")
     public String delDep(Integer id){
-        //未判断该部门是否有员工
-        departmentService.delDepartemnt(id);
+        boolean flag=true;
+        Post post=new Post();
+        Staff staff=new Staff();
+        post.setDid(id);
+        List<Post> posts = postService.queryPosts(post);
+        for (Post p : posts) {
+            staff.setPid(p.getId());
+            if(staffService.queryStaffs(staff).size()!=0){
+                flag=false;
+            }
+        }
+        if(flag){
+            departmentService.delDepartemnt(id);
+        }
         return "forward:toAdminDep";
     }
 
@@ -148,23 +186,72 @@ public class AdminController {
 
     @RequestMapping("addRecruit")
     public String addRecruit(Recruitment recruitment){
-        System.out.println(recruitment.getCompany());
-        System.out.println(recruitment.getDescription());
+        Integer pid = recruitment.getPid();
+        Post post=new Post();
+        post.setId(pid);
+        Post p = postService.queryPosts(post).get(0);
+        recruitment.setJob(p.getName());
+        Integer did = recruitment.getDid();
+        Department department= new Department();
+        department.setId(did);
+        Department d = departmentService.queryDepartments(department).get(0);
+        recruitment.setCompany(d.getName());
         recruitment.setState(1);
         recruitmentService.addRecruitment(recruitment);
         return "forward:toAdminMain";
     }
 
+    @RequestMapping("updateRec")
+    public String updateRec(Recruitment recruitment){
+        Integer pid = recruitment.getPid();
+        Post post=new Post();
+        post.setId(pid);
+        Post p = postService.queryPosts(post).get(0);
+        recruitment.setJob(p.getName());
+        Integer did = recruitment.getDid();
+        Department department= new Department();
+        department.setId(did);
+        Department d = departmentService.queryDepartments(department).get(0);
+        recruitment.setCompany(d.getName());
+        recruitment.setState(1);
+        recruitmentService.updateRecruitment(recruitment);
+        return "forward:toAdminMain";
+    }
+
+    @RequestMapping("repealRec")
+    public String repealRec(Recruitment recruitment){
+        recruitment.setState(0);
+        recruitmentService.updateRecruitment(recruitment);
+        return "forward:toAdminMain";
+    }
+
+    @RequestMapping("delRec")
+    public String delRec(Integer id){
+        recruitmentService.delRecruitment(id);
+        return "forward:toAdminMain";
+    }
+
     @RequestMapping("recruitDraft")
     public String recruitDraft(Recruitment recruitment){
+        Integer pid = recruitment.getPid();
+        Post post=new Post();
+        post.setId(pid);
+        Post p = postService.queryPosts(post).get(0);
+        recruitment.setJob(p.getName());
+        Integer did = recruitment.getDid();
+        Department department= new Department();
+        department.setId(did);
+        Department d = departmentService.queryDepartments(department).get(0);
+        recruitment.setCompany(d.getName());
         recruitment.setState(0);
         recruitmentService.addRecruitment(recruitment);
         return "forward:toAdminMain";
     }
 
     @RequestMapping("addTrain")
-    public String addTrain(Train train,Integer[] staff) {
+    public String addTrain(Train train,String datetime,Integer[] staff) {
         train.setState(1);
+        train.setTime(datetime.replace("T"," "));
         trainService.addTrain(train);
         Integer trid = trainService.lastInsertId();
         TrainTarget trainTarget=new TrainTarget();
@@ -177,8 +264,9 @@ public class AdminController {
     }
 
     @RequestMapping("updateTrain")
-    public String updateTrain(Train train,Integer[] staff) {
+    public String updateTrain(Train train,String datetime,Integer[] staff) {
         train.setState(1);
+        train.setTime(datetime.replace("T"," "));
         trainService.updateTrain(train);
         Integer trid = train.getId();
         TrainTarget trainTarget =new TrainTarget();
@@ -192,8 +280,9 @@ public class AdminController {
     }
 
     @RequestMapping("trainDraft")
-    public String trainDraft(Train train,Integer[] staff) {
+    public String trainDraft(Train train,String datetime,Integer[] staff) {
         train.setState(0);
+        train.setTime(datetime.replace("T"," "));
         trainService.addTrain(train);
         Integer trid = trainService.lastInsertId();
         TrainTarget trainTarget=new TrainTarget();

@@ -26,12 +26,13 @@
 <body>
 <fieldset>
     <legend>选择投递的简历</legend>
-    <form action="pr" method="post">
-        <%
+    <%
         List<Resume> resumes = (List<Resume>) request.getAttribute("resumes");
         for (Resume resume : resumes) {
-        %>
-        <table style="float: left">
+    %>
+    <table style="float: left">
+        <form action="pr" method="post">
+
             <tr>
                 <th colspan="2">个&emsp;人&emsp;简&emsp;历</th>
             </tr>
@@ -63,17 +64,17 @@
                 <td colspan="2">个人评价：<textarea name="assessment" style="width: 75%;height: 100px;resize: none"><%=resume.getAssessment()%></textarea></td>
             </tr>
             <tr>
-                <td><input type="hidden" name="rid" value=<%=request.getParameter("rid")%>>
-                <input type="hidden" name="resid" value=<%=resume.getId()%>>
-                <input type="submit" value="投递简历">
+                <td>
+                    <input type="hidden" name="rid" value=<%=request.getParameter("rid")%>>
+                    <input type="hidden" name="resid" value=<%=resume.getId()%>>
+                    <input type="submit" value="投递简历">
                 </td>
             </tr>
-        </table>
-        <%
-            }
-        %>
-    </form>
-
+        </form>
+    </table>
+    <%
+        }
+    %>
 </fieldset>
 </body>
 </html>

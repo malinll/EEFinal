@@ -32,6 +32,16 @@
                     }
                 })
             })
+
+            $(".updateRDep").change(function () {
+                var p = $(this).parent().next().find(".updateRPost");
+                $.get("queryPostsByDep",{"did":$(this).val()},function (obj) {
+                    p.empty();
+                    for(var i in obj){
+                        p.append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
+                    }
+                })
+            })
         })
     </script>
 </head>
@@ -106,8 +116,7 @@
                                     </c:when>
                                     <c:when test="${interview.getState()==13}">
                                         <c:out value="已确认"/>
-                                        <%--录用时还未创建员工账号--%>
-                                        录用与否&emsp;<a href="hire?iid=${interview.id}">是</a>/
+                                        录用与否&emsp;<a href="hire?iid=${interview.id}&resid=${interview.resid}&rid=${interview.rid}">是</a>/
                                         <a href="interviewReject?iid=${interview.id}">否</a>
                                     </c:when>
                                     <c:when test="${interview.getState()==14}">
@@ -123,30 +132,117 @@
                 </c:forEach>
             </table>
         </fieldset>
-        <br/><hr/><br/>
-        <fieldset>
-            <legend>发布招聘</legend>
-            <form action="addRecruit" method="post">
-                选择部门：
-                <select name="company" id="dep">
-                    <c:forEach items="${requestScope.departments}" var="department">
-                        <option value=${department.id}>${department.name}</option>
-                    </c:forEach>
-                </select>
-                选择职位：
-                <select name="job" id="post">
-                    <c:forEach items="${requestScope.posts}" var="post">
-                        <option value=${post.name}>${post.name}</option>
-                    </c:forEach>
-                </select>
-                薪资：<input type="number" name="pay">
-                地区：<input type="text" name="area" >
-                描述：<input type="text" name="description">
-                资质：<input type="text" name="quality">
-                <input type="submit" value="发布招聘">
-                <input type="submit" formaction="recruitDraft" value="保存草稿">
-            </form>
-        </fieldset>
     </div>
+    <br/><hr/><br/>
+    <fieldset>
+        <legend>发布招聘</legend>
+        <form action="addRecruit" method="post">
+            选择部门：
+            <select name="did" id="dep">
+                <c:forEach items="${requestScope.departments}" var="department">
+                    <option value=${department.id}>${department.name}</option>
+                </c:forEach>
+            </select>
+            选择职位：
+            <select name="pid" id="post">
+                <c:forEach items="${requestScope.posts}" var="post">
+                    <c:if test="${post.did==requestScope.departments[0].id}">
+                        <option value=${post.id}>${post.name}</option>
+                    </c:if>
+                </c:forEach>
+            </select>
+            薪资：<input type="number" name="pay">
+            地区：<input type="text" name="area" >
+            描述：<input type="text" name="description">
+            资质：<input type="text" name="quality">
+            <input type="submit" value="发布招聘">
+            <input type="submit" formaction="recruitDraft" value="保存草稿">
+        </form>
+    </fieldset>
+    <fieldset>
+        <legend>已发布招聘</legend>
+        <table>
+            <tr>
+                <th>部门</th>
+                <th>职位</th>
+                <th>薪资</th>
+                <th>地区</th>
+                <th>描述</th>
+                <th>要求</th>
+                <th>操作</th>
+            </tr>
+        <c:forEach items="${requestScope.rList}" var="r">
+            <c:if test="${r.state==1}">
+                <tr>
+                    <td>${r.company}</td>
+                    <td>${r.job}</td>
+                    <td>${r.pay}</td>
+                    <td>${r.area}</td>
+                    <td>${r.description}</td>
+                    <td>${r.quality}</td>
+                    <td><a href="repealRec?id=${r.id}">撤回</a></td>
+                </tr>
+            </c:if>
+        </c:forEach>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>招聘草稿箱</legend>
+        <table>
+            <tr>
+                <th>部门</th>
+                <th>职位</th>
+                <th>薪资</th>
+                <th>地区</th>
+                <th>描述</th>
+                <th>要求</th>
+                <th>操作</th>
+            </tr>
+            <c:forEach items="${requestScope.rList}" var="r">
+                <c:if test="${r.state==0}">
+                    <tr>
+                        <form action="delRec" method="post">
+                            选择职位：
+                            <td>
+                                <select name="did" class="updateRDep">
+                                    <c:forEach items="${requestScope.departments}" var="department">
+                                        <option value=${department.id}
+                                        <c:if test="${department.name.equals(r.company)}">
+                                            selected
+                                        </c:if>
+                                        >${department.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="pid" class="updateRPost">
+                                <c:forEach items="${requestScope.posts}" var="post">
+                                    <c:if test="${r.did==post.did}">
+                                        <option value=${post.id}
+                                        <c:if test="${post.id==r.pid}">
+                                                        selected
+                                        </c:if>
+                                        >${post.name}</option>
+                                    </c:if>
+                                </c:forEach>
+                                </select>
+                            </td>
+
+                            <td><input type="number" name="pay" value="${r.pay}"></td>
+                            <td><input name="area" value="${r.area}"></td>
+                            <td><input name="description" value="${r.description}"></td>
+                            <td><input name="quality" value="${r.quality}"></td>
+                            <td>
+                                <input type="hidden" name="id" value="${r.id}">
+                                <input type="submit" value="删除">
+                                <input type="submit" formaction="updateRec" value="发布">
+                            </td>
+                        </form>
+                    </tr>
+                </c:if>
+            </c:forEach>
+        </table>
+    </fieldset>
 </body>
 </html>

@@ -28,7 +28,7 @@ public class StaffController {
     @RequestMapping("staffLogin")
     public String staffLogin(String name, String pass, HttpSession session){
         Staff staff = new Staff();
-        staff.setName(name);
+        staff.setPhone(Long.parseLong(name));
         staff.setPass(pass);
         Staff s = staffService.login(staff);
         if(s!=null){

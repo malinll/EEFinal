@@ -60,17 +60,16 @@
                     <td>
                         <c:choose>
                             <c:when test="${interview.getState()==11}">
-                                <c:out value="邀面试"/>
-                                时间：${interview.time}
-                                地点：${interview.site}
+                                面试时间：${interview.time}<br/>
+                                面试地点：${interview.site}<br/>
                             </c:when>
                             <c:when test="${interview.getState()==13}">
-                                <c:out value="已确认"/>
-                                时间：${interview.time}
-                                地点：${interview.site}
+                                面试时间：${interview.time}<br/>
+                                面试地点：${interview.site}<br/>
+                                请携带身份证原件及复印件、简历等相关文件
                             </c:when>
                             <c:when test="${interview.getState()==15}">
-                                <c:out value="已录用"/>
+                                员工账号/密码为您的手机号
                             </c:when>
                         </c:choose>
                     </td>

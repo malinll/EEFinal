@@ -2,20 +2,64 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project.eefinal.dao.RecruitmentDao">
     <insert id="addRecruitment" parameterType="com.project.eefinal.model.Recruitment">
-        insert into T_RECRUITMENT values(R_SEQ.nextval,#{job},#{company},#{pay},#{area},#{description},#{quality},#{state})
+        insert into T_RECRUITMENT values(R_SEQ.nextval,#{job},#{company},#{pay},
+        #{area},#{description},#{quality},#{state},#{pid},#{did})
     </insert>
+
+    <update id="updateRecruitment" parameterType="com.project.eefinal.model.Recruitment">
+        update T_RECRUITMENT
+        <set>
+            <if test="pid!=null">
+                R_PID=#{pid},
+            </if>
+            <if test="did!=null">
+                R_DID=#{did},
+            </if>
+            <if test="job!=null">
+                R_JOB=#{job},
+            </if>
+            <if test="company!=null">
+                R_COMPANY=#{company},
+            </if>
+            <if test="pay!=null">
+                R_PAY=#{pay},
+            </if>
+            <if test="area!=null">
+                R_AREA=#{area},
+            </if>
+            <if test="description!=null">
+                R_DESCRIPTION=#{description},
+            </if>
+            <if test="quality!=null">
+                R_QUALITY=#{quality},
+            </if>
+            <if test="state!=null">
+                R_STATE=#{state}
+            </if>
+        </set>
+           where R_ID=#{id}
+    </update>
+
+    <delete id="delRecruitment" parameterType="integer">
+        delete from T_RECRUITMENT where R_ID=#{id}
+    </delete>
+
     <select id="queryRecruitment" parameterType="com.project.eefinal.model.Recruitment" resultMap="RecruitmentMap">
         select * from T_RECRUITMENT
         <where>
             <if test="id!=null">
                 and  R_ID=#{id}
             </if>
-            and  R_STATE=1
+            <if test="state!=null">
+                and  R_STATE=#{state}
+            </if>
         </where>
     </select>
 
     <resultMap id="RecruitmentMap" type="com.project.eefinal.model.Recruitment">
         <id property="id" column="R_ID"/>
+        <result property="pid" column="R_PID"/>
+        <result property="did" column="R_DID"/>
         <result property="job" column="R_JOB"/>
         <result property="company" column="R_COMPANY"/>
         <result property="pay" column="R_PAY"/>

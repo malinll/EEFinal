@@ -4,6 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.eefinal.dao.StaffDao">
+
+    <insert id="addStaff" parameterType="com.project.eefinal.model.Staff">
+        insert into T_STAFF values (S_SEQ.nextval,#{name},#{pass},#{pid},#{gender},#{birth},
+        #{nation},#{nativePlace},#{phone},#{address},#{email},#{state},#{money})
+    </insert>
+
     <update id="updateStaff" parameterType="com.project.eefinal.model.Staff">
         update T_STAFF
         <set>
@@ -34,6 +40,9 @@
             </if>
             <if test="pid!=null">
                 and S_PID=#{pid}
+            </if>
+            <if test="phone!=null">
+                and S_PHONE=#{phone}
             </if>
         </where> 
     </select>

@@ -23,7 +23,7 @@
         <form action="addTrain" method="post">
             培训主题：<input name="title"/>
             培训内容：<input name="content"/>
-            培训时间：<input type="datetime-local" name="time"/>
+            培训时间：<input type="datetime-local" name="datetime"/>
             培训地点：<input name="site"/>
             选择员工：
             <c:forEach items="${requestScope.staffs}" var="staff">
@@ -84,7 +84,7 @@
                         <tr>
                             <td><input name="title" value="${train.title}"></td>
                             <td><input name="content" value="${train.content}"></td>
-                            <td><input type="datetime-local" name="time" value="${train.time}"></td>
+                            <td><input type="datetime-local" name="datetime" value="${train.time.replace(" ","T")}"></td>
                             <td><input name="site" value="${train.site}"></td>
                             <td>
                                 <c:forEach items="${requestScope.staffs}" var="staff" varStatus="j">
@@ -95,9 +95,11 @@
                                         <input type="checkbox" name="staff" value="${staff.id}">${staff.name}
                                     </c:if>--%>
                                     <input type="checkbox" name="staff" value="${staff.id}"
-                                    <c:if test="${requestScope.tt[i.index][j.index].id==staff.id}">
-                                        checked
-                                    </c:if>
+                                    <c:forEach items="${requestScope.tt[i.index]}" var="s">
+                                        <c:if test="${s.id==staff.id}">
+                                               checked
+                                        </c:if>
+                                    </c:forEach>
                                     >${staff.name}
                                 </c:forEach>
                             </td>

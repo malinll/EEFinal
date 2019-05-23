@@ -16,6 +16,14 @@ public class RecruitmentService {
         return recruitmentDao.addRecruitment(recruitment);
     }
 
+    public boolean delRecruitment(Integer id){
+        return recruitmentDao.delRecruitment(id);
+    }
+
+    public boolean updateRecruitment(Recruitment recruitment){
+        return recruitmentDao.updateRecruitment(recruitment);
+    }
+
     public List<Recruitment> queryRecruitment(Recruitment recruitment){
         return recruitmentDao.queryRecruitment(recruitment);
     }

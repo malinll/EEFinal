@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Recruitment implements Serializable {
     private Integer id;
+    private Integer pid;
+    private Integer did;
     private String job;
     private String company;
     private Integer pay;
@@ -31,6 +33,22 @@ public class Recruitment implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
+    }
+
+    public Integer getDid() {
+        return did;
+    }
+
+    public void setDid(Integer did) {
+        this.did = did;
     }
 
     public String getJob() {

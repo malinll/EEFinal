@@ -20,6 +20,10 @@ public class StaffService {
         return s.get(0);
     }
 
+    public boolean addStaff(Staff staff){
+        return staffDao.addStaff(staff);
+    }
+
     public boolean updateStaff(Staff staff){
         return staffDao.updateStaff(staff);
     }

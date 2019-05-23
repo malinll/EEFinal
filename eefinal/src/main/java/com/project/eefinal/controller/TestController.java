@@ -38,7 +38,9 @@ public class TestController {
 
     @RequestMapping("/")
     public String index(HttpServletRequest request){
-        List<Recruitment> recruitments = recruitmentService.queryRecruitment(new Recruitment());
+        Recruitment recruitment = new Recruitment();
+        recruitment.setState(1);
+        List<Recruitment> recruitments = recruitmentService.queryRecruitment(recruitment);
         request.setAttribute("recruitments",recruitments);
         return "index";
     }
@@ -69,13 +71,15 @@ public class TestController {
 
     @RequestMapping("toRecruit")
     public String toRecruit(HttpSession session){
-        List<Recruitment> recruitments = recruitmentService.queryRecruitment(new Recruitment());
+        Recruitment recruitment = new Recruitment();
+        recruitment.setState(1);
+        List<Recruitment> recruitments = recruitmentService.queryRecruitment(recruitment);
         session.setAttribute("recruitments",recruitments);
         return "recruit";
     }
 
     @RequestMapping("toPostResume")
-    public String toPostResume(Integer rid, Integer vid,HttpServletRequest request){
+    public String toPostResume(Integer vid,HttpServletRequest request){
         Resume resume = new Resume();
         resume.setVid(vid);
         resumeService.queryResumes(resume);
@@ -141,10 +145,12 @@ public class TestController {
         request.setAttribute("recruitments",recruitments);
         List<Department> departments = departmentService.queryDepartments(new Department());
         Post post=new Post();
-        post.setDid(departments.get(0).getId());
+//        post.setDid(departments.get(0).getId());
         List<Post> posts = postService.queryPosts(post);
         request.setAttribute("departments",departments);
         request.setAttribute("posts",posts);
+        List<Recruitment> rList = recruitmentService.queryRecruitment(new Recruitment());
+        request.setAttribute("rList",rList);
         return "adminMain";
     }
 
