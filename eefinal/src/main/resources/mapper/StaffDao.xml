@@ -14,16 +14,16 @@
         update T_STAFF
         <set>
             <if test="pass!=null">
-                S_PASS=#{pass}
+                S_PASS=#{pass},
             </if>
             <if test="pid!=null">
-                ,S_PID=#{pid}
+                S_PID=#{pid},
             </if>
             <if test="state!=null">
-                ,S_STATE={state}
+                S_STATE=#{state}
             </if>
         </set>
-        where S_ID=#{id};
+        where S_ID=#{id}
     </update>
 
     <select id="queryStaffs" parameterType="com.project.eefinal.model.Staff" resultMap="StaffMap">

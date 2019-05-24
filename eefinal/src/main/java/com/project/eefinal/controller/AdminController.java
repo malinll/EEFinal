@@ -127,6 +127,7 @@ public class AdminController {
 
     @RequestMapping("addDep")
     public String addDep(Department department){
+        //重名判断
         department.setDate(new Date());
         departmentService.addDepartment(department);
         return "forward:toAdminDep";
@@ -134,6 +135,7 @@ public class AdminController {
 
     @RequestMapping("updateDep")
     public String updateDep(Department department){
+        //重名判断
         departmentService.updateDepartment(department);
         return "forward:toAdminDep";
     }
@@ -149,6 +151,7 @@ public class AdminController {
             staff.setPid(p.getId());
             if(staffService.queryStaffs(staff).size()!=0){
                 flag=false;
+                break;
             }
         }
         if(flag){
@@ -159,20 +162,25 @@ public class AdminController {
 
     @RequestMapping("addPost")
     public String addPost(Post post){
+        //重名判断
         postService.addPost(post);
         return "forward:toAdminDep";
     }
 
     @RequestMapping("updatePost")
     public String updatePost(Post post){
+        //重名判断
         postService.updatePost(post);
         return "forward:toAdminDep";
     }
 
     @RequestMapping("delPost")
     public String delPost(Integer id){
-        //未判断该职位是否有员工
-        postService.delPost(id);
+        Staff staff=new Staff();
+        staff.setPid(id);
+        if(staffService.queryStaffs(staff)==null){
+            postService.delPost(id);
+        }
         return "forward:toAdminDep";
     }
 
@@ -292,5 +300,25 @@ public class AdminController {
             trainTargetService.addTrainTarget(trainTarget);
         }
         return "forward:toTrain";
+    }
+
+    @RequestMapping("changeState")
+    public String changeState(Staff staff){
+        staff.setState(1);
+        staffService.updateStaff(staff);
+        return "forward:toAdminDep";
+    }
+
+    @RequestMapping("fire")
+    public String fire(Staff staff){
+        staff.setState(2);
+        staffService.updateStaff(staff);
+        return "forward:toAdminDep";
+    }
+
+    @RequestMapping("changePost")
+    public String changePost(Staff staff){
+        staffService.updateStaff(staff);
+        return "forward:toAdminDep";
     }
 }

@@ -15,6 +15,7 @@
 <head>
     <base href="<%=basePath%>"/>
     <title>个人中心</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <style>
         th,td{
             width: 500px;
@@ -65,6 +66,9 @@
             padding: 0;
             display: block;
         }
+        #menu a{
+            text-decoration: none;
+        }
         .head-menu li {
             list-style: none;
             display: inline;
@@ -100,6 +104,14 @@
             margin-top: 16px;
             float: left;
         }
+        .side-bar .list-group-item{
+            border: 0;
+            border-radius: 3px;
+            margin-bottom: 5px;
+            font-family: PingFangSC-Regular;
+            font-size: 16px;
+            text-align: center;
+        }
     </style>
     <script src="js/jquery-3.1.0.js"></script>
     <script>
@@ -134,52 +146,99 @@
         <i style="float:left;color:white;font-style:normal;font-size:14px;line-height:54px;opacity: 0.8;">招聘官网</i>
     </div>
 </div>
+    <div class="container" style="max-width: 1100px;margin-top: 50px;">
+        <%--<div class="row">--%>
+            <div class="col-sm-2">
+                <div class="list-group side-bar">
+                    <a href="javascript:void(0)" class="list-group-item active" id="addr" style="background-color:#2C2F33;color: #F3732A">新增简历</a>
+                    <a href="toCheckResume?vid=${sessionScope.visitor.id}" class="list-group-item">查看简历</a>
+                    <a href="toMyPost?vid=${sessionScope.visitor.id}" class="list-group-item">我的投递</a>
+                </div>
+                <%--<ul class="nav nav-pills nav-stacked">
+                    <li><a href="javascript:void(0)" id="addr">新增简历</a></li>
+                    <li><a href="toCheckResume?vid=${sessionScope.visitor.id}" class="list-group-item">查看简历</a></li>
+                    <li><a href="toMyPost?vid=${sessionScope.visitor.id}" class="list-group-item">我的投递</a></li>
+                </ul>--%>
+            </div>
+            <div class="col-sm-10">
+                <%--新增简历界面--%>
+                <form action="addResume" method="post" id="ar" style="display: none">
+                    <table>
+                        <tr>
+                            <th colspan="2">个&emsp;人&emsp;简&emsp;历</th>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td>姓&emsp;名：<input name="name"></td>
+                            <td>
+                                性&emsp;别：<input type="radio" name="gender" value="男">男/
+                                <input type="radio" name="gender" value="女">女
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>生&emsp;日：<input type="date" name="birth"/></td>
+                            <td>民&emsp;族：<input name="nation"/></td>
+                        </tr>
+                        <tr>
+                            <td>籍&emsp;贯：<input name="nativePlace"/></td>
+                            <td>手机号：<input type="number" name="phone"/></td>
+                        </tr>
+                        <tr>
+                            <td>学&emsp;历：<input name="education"/></td>
+                            <td>专&emsp;业：<input name="major"/></td>
+                        </tr>
+                        <tr>
+                            <td>地&emsp;址：<input name="address"/></td>
+                            <td>邮&emsp;箱：<input name="email"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">技能特长：<textarea name="skills" style="width: 75%;height: 100px;resize: none"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">个人评价：<textarea name="assessment" style="width: 75%;height: 100px;resize: none"></textarea></td>
+                        </tr>
+                    </table>
+                    <input type="hidden" name="vid" value=${sessionScope.visitor.id}>
+                    <input type="submit" value="提交简历">
+                </form>
 
-    <a href="javascript:void(0)" id="addr">新增简历</a> |
-    <a href="toCheckResume?vid=${sessionScope.visitor.id}">查看简历</a> |
-    <a href="toMyPost?vid=${sessionScope.visitor.id}">我的投递</a>
+                <form class="container" action="addResume" method="post">
+                    <h3>个人简历</h3>
+                    <br/>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <label>姓&emsp;名：</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input name="name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <label>性&emsp;别：</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="radio" class="form-control" name="gender" value="男">男/
+                                <input type="radio" class="form-control" name="gender" value="女">女
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label>生&emsp;日：</label>
+                            <input type="date" class="form-control" name="birth"/>
+                        </div>
+                        <div class="form-group">
+                            <label>民&emsp;族：</label>
+                            <input class="form-control" name="nation"/>
+                        </div>
 
-    <hr/>
-    <br/>
-    <%--新增简历界面--%>
-    <form action="addResume" method="post" id="ar" style="display: none">
-        <table>
-            <tr>
-                <th colspan="2">个&emsp;人&emsp;简&emsp;历</th>
-            </tr>
-            <tr></tr>
-            <tr>
-                <td>姓&emsp;名：<input name="name"></td>
-                <td>
-                    性&emsp;别：<input type="radio" name="gender" value="男">男/
-                    <input type="radio" name="gender" value="女">女
-                </td>
-            </tr>
-            <tr>
-                <td>生&emsp;日：<input type="date" name="birth"/></td>
-                <td>民&emsp;族：<input name="nation"/></td>
-            </tr>
-            <tr>
-                <td>籍&emsp;贯：<input name="nativePlace"/></td>
-                <td>手机号：<input type="number" name="phone"/></td>
-            </tr>
-            <tr>
-                <td>学&emsp;历：<input name="education"/></td>
-                <td>专&emsp;业：<input name="major"/></td>
-            </tr>
-            <tr>
-                <td>地&emsp;址：<input name="address"/></td>
-                <td>邮&emsp;箱：<input name="email"/></td>
-            </tr>
-            <tr>
-                <td colspan="2">技能特长：<textarea name="skills" style="width: 75%;height: 100px;resize: none"></textarea></td>
-            </tr>
-            <tr>
-                <td colspan="2">个人评价：<textarea name="assessment" style="width: 75%;height: 100px;resize: none"></textarea></td>
-            </tr>
-        </table>
-        <input type="hidden" name="vid" value=${sessionScope.visitor.id}>
-        <input type="submit" value="提交简历">
-    </form>
+                    </div>
+                </form>
+            </div>
+        <%--</div>--%>
+    </div>
+
 </body>
 </html>

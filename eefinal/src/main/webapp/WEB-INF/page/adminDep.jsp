@@ -36,6 +36,7 @@
                     }
                 })
             })
+
             $("#dep").change(function () {
                 $.get("queryPostsByDep",{"did":$(this).val()},function (obj) {
                     $("#post option").remove();
@@ -49,15 +50,16 @@
                             $("#staff").append("<option value='"+o[i]['id']+"'>"+o[i]['name']+"</option>")
                         }
                         if(o[0]['state']==0){
-                            $("#state").text("试用");
+                            $("#state").html("试用<a href='changeState?id="+o[0]['id']+"'>转正</a>");
                         }else if(o[0]['state']==1){
-                            $("#state").text("在职");
+                            $("#state").html("在职<a href='fire?id="+o[0]['id']+"'>辞退</a>");
                         }else {
                             $("#state").text("离职");
                         }
                     })
                 })
             })
+
             $("#post").change(function () {
                 $.get("queryStaffsByPost",{"pid":$(this).val()},function (obj) {
                     $("#staff option").remove();
@@ -66,22 +68,32 @@
                         $("#staff").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
                     }
                     if(obj[0]['state']==0){
-                        $("#state").text("试用");
+                        $("#state").html("试用<a href='changeState?id="+obj[0]['id']+"'>转正</a>");
                     }else if(obj[0]['state']==1){
-                        $("#state").text("在职");
+                        $("#state").html("在职<a href='fire?id="+obj[0]['id']+"'>辞退</a>");
                     }else {
                         $("#state").text("离职");
                     }
                 })
             })
+
             $("#staff").change(function () {
                 $.get("queryStaffById",{"id":$(this).val()},function (obj) {
                     if(obj['state']==0){
-                        $("#state").text("试用");
+                        $("#state").html("试用<a href='changeState?id="+obj['id']+"'>转正</a>");
                     }else if(obj['state']==1){
-                        $("#state").text("在职");
+                        $("#state").html("在职<a href='fire?id="+obj['id']+"'>辞退</a>");
                     }else {
                         $("#state").text("离职");
+                    }
+                })
+            })
+
+            $("#cDep").change(function () {
+                $.get("queryPostsByDep",{"did":$(this).val()},function (obj) {
+                    $("#cPost option").remove();
+                    for(var i in obj){
+                        $("#cPost").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
                     }
                 })
             })
@@ -174,22 +186,38 @@
             </c:forEach>
         </select>
         <br/>
-        查看员工：
-        <select id="staff">
-            <c:forEach items="${requestScope.staffs}" var="staff">
-                <option value=${staff.id}>${staff.name}</option>
-            </c:forEach>
-        </select>
+        <form action="changePost" method="post">
+            查看员工：
+            <select id="staff" name="id">
+                <c:forEach items="${requestScope.staffs}" var="staff">
+                    <option value=${staff.id}>${staff.name}</option>
+                </c:forEach>
+            </select>
+            <br/>
+            换岗部门：
+            <select id="cDep">
+                <c:forEach items="${requestScope.departments}" var="department">
+                    <option value=${department.id}>${department.name}</option>
+                </c:forEach>
+            </select>
+            换岗职位：
+            <select id="cPost" name="pid">
+                <c:forEach items="${requestScope.posts}" var="post">
+                    <option value=${post.id}>${post.name}</option>
+                </c:forEach>
+            </select>
+            <input type="submit" value="换岗">
+        </form>
         <br/>
         <p>
             员工状态：
             <span id="state">
             <c:choose>
                 <c:when test="${requestScope.staffs[0].state}==0">
-                    试用
+                    试用<a href="changeState?id=${requestScope.staffs[0].id}">转正</a>
                 </c:when>
                 <c:when test="${requestScope.staffs[0].state}==1">
-                    在职
+                    在职<a href="fire?id=${requestScope.staffs[0].id}">辞退</a>
                 </c:when>
                 <c:when test="${requestScope.staffs[0].state}==2">
                     离职
