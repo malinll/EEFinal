@@ -174,7 +174,8 @@
                         <a href="toRegister">注册</a>
                     </c:when>
                     <c:otherwise>
-                        欢迎 ${sessionScope.visitor.name} 来到阿里巴巴集团招聘！
+                        欢迎 ${sessionScope.visitor.name} 来到阿里巴巴集团招聘！|
+                        <a href="logout">退出</a>
                     </c:otherwise>
                 </c:choose>
 
@@ -254,7 +255,14 @@
                                     <%=recruitment.getQuality()%>
                                 </p>
                                 <div style="padding: 20px 0">
-                                    <a href="toPostResume?rid=<%=recruitment.getId()%>&vid=${sessionScope.visitor.id}">
+                                    <c:choose>
+                                    <c:when test="${sessionScope.visitor==null}">
+                                    <a href="toLogin">
+                                        </c:when>
+                                        <c:otherwise>
+                                        <a href="toPostResume?rid=<%=recruitment.getId()%>&vid=${sessionScope.visitor.id}">
+                                            </c:otherwise>
+                                            </c:choose>
                                         <div style="width: 80px;height: 31px;display: inline-block;color: #fff;padding: 5px 12px;border: 0;border-radius: 3px;font-weight: bold;font-size: 14px;background: #FF6600;text-align:center;line-height: 31px;">
                                             投递简历
                                         </div>

@@ -14,14 +14,15 @@
 <head>
     <base href="<%=basePath%>"/>
     <title>用户登录</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
     <fieldset>
         <legend>用户登录</legend>
         <br/>
             <form action="login" method="post">
-                用户名：<input name="name" required/><br/><br/>
-                密&emsp;码：<input type="password" name="pass" required/><br/><br/>
+                用户名：<input name="name" required maxlength="11"/><br/><br/>
+                密&emsp;码：<input type="password" name="pass" required maxlength="11"/><br/><br/>
                 身&emsp;份：<input type="radio" name="rank" value="visitor" checked/>游客
                 <input type="radio" name="rank" value="staff"/>员工
                 <input type="radio" name="rank" value="admin"/>管理员<br/><br/>

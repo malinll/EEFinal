@@ -15,6 +15,7 @@
     <base href="<%=basePath%>"/>
     <title>游客注册</title>
     <script src="js/jquery-3.1.0.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script>
         $(function () {
             $("input[name='name']").blur(function () {
@@ -31,8 +32,8 @@
     <legend>游客注册</legend>
     <br/>
     <form action="register" method="post">
-        用户名：<input name="name" required/>&emsp;<span></span><br/><br/>
-        密&emsp;码：<input type="password" name="pass" required/><br/><br/>
+        用户名：<input name="name" required maxlength="11"/>&emsp;<span></span><br/><br/>
+        密&emsp;码：<input type="password" name="pass" required maxlength="11"/><br/><br/>
         &emsp;&emsp;&emsp;&emsp;<input type="submit" value="注册"/>
     </form>
 </fieldset>

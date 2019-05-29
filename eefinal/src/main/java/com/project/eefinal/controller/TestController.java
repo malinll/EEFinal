@@ -35,6 +35,8 @@ public class TestController {
     private ClockService clockService;
     @Resource
     private RewardPunishmentService rewardPunishmentService;
+    @Resource
+    private PayService payService;
 
     @RequestMapping("/")
     public String index(HttpServletRequest request){
@@ -230,25 +232,189 @@ public class TestController {
     @RequestMapping("toAdminPay")
     public String toAdminPay(HttpServletRequest request){
         RewardsPunishment rp=new RewardsPunishment();
-        int num;
-        List<Staff> staffs = staffService.queryStaffs(new Staff());
+        RewardsPunishment punishment=new RewardsPunishment();
+        Clock clock=new Clock();
+        Pay pay=new Pay();
+        int num;//奖惩金额
+        int count;//上月打下班卡次数
+        List<Staff> staffList = staffService.queryStaffs(new Staff());
+        List<Staff> staffs=new ArrayList<>();
         List<Integer> rps=new ArrayList<>();
-        for (Staff staff : staffs) {
-            num=0;
-            rp.setSid(staff.getId());
-            List<RewardsPunishment> rewardsPunishments = rewardPunishmentService.queryRewardPunishment(rp);
-            for (RewardsPunishment rewardsPunishment : rewardsPunishments) {
-                if(rewardsPunishment.getState()==1){
-                    num+=rewardsPunishment.getMoney();
-                }else {
-                    num-=rewardsPunishment.getMoney();
+        List<Integer> overtime=new ArrayList<>();
+        Calendar cal=Calendar.getInstance();
+        //获得每个非离职员工的薪资
+        for (Staff staff : staffList) {
+            //state==2为离职
+            if(staff.getState()==2){
+                continue;
+            }
+            pay.setSid(staff.getId());
+            List<Pay> pays = payService.queryPay(pay);
+            boolean isPaid=true;
+            for (Pay pa : pays) {
+                if(pa.getTime().equals(Calendar.getInstance().get(Calendar.YEAR)+"-"+Calendar.getInstance().get(Calendar.MONTH))){
+                    isPaid=false;
+                    break;
                 }
             }
-            rps.add(num);
+            if(isPaid){
+                staffs.add(staff);
+                num=0;
+                rp.setSid(staff.getId());
+                List<RewardsPunishment> rewardsPunishments = rewardPunishmentService.queryRewardPunishment(rp);
+                //搜索该员工上月下班卡
+                clock.setSid(staff.getId());
+                clock.setState(2);
+                List<Clock> clocks = clockService.queryClock(clock);
+                count=0;
+                for (Clock c : clocks) {
+                    cal.setTime(c.getTime());
+                    //判断是否为上月
+                    if(cal.get(Calendar.MONTH)==Calendar.getInstance().get(Calendar.MONTH)-1){
+                        count++;
+                    }
+                }
+                //大于22张卡 计算加班金额
+                if(count>=22){
+                    overtime.add((count-22)*150);
+                }else {
+                    overtime.add(0);
+                    boolean flag=true;
+                    for (RewardsPunishment rewardsPunishment : rewardsPunishments) {
+                        cal.setTime(rewardsPunishment.getTime());
+                        //判断上月是否已经已经有对于打卡的奖惩
+                        if((cal.get(Calendar.MONTH)+1)==Calendar.getInstance().get(Calendar.MONTH)
+                                && rewardsPunishment.getReason().equals("旷工"+(22-count)+"次")){
+                            flag=false;
+                        }
+                    }
+                    if(flag){
+                        //若没有新增奖惩记录
+                        cal.set(Calendar.getInstance().get(Calendar.YEAR),Calendar.getInstance().get(Calendar.MONTH)-1,01);
+                        punishment.setMoney((22-count)*300);
+                        punishment.setReason("旷工"+(22-count)+"次");
+                        punishment.setSid(staff.getId());
+                        punishment.setTime(cal.getTime());
+                        punishment.setState(2);
+                        rewardPunishmentService.addRewardPunishment(punishment);
+                    }
+                }
+                //遍历上月奖惩记录得到奖惩金额
+                rewardsPunishments = rewardPunishmentService.queryRewardPunishment(rp);
+                for (RewardsPunishment rewardsPunishment : rewardsPunishments) {
+                    if(rewardsPunishment.getState()==1){
+                        num+=rewardsPunishment.getMoney();
+                    }else {
+                        num-=rewardsPunishment.getMoney();
+                    }
+                }
+                rps.add(num);
+            }
         }
         request.setAttribute("staffs",staffs);
         request.setAttribute("rps",rps);
+        request.setAttribute("ots",overtime);
         return "adminPay";
+    }
+
+    @RequestMapping("toStaffInfo")
+    public String toStaffInfo(HttpSession session, HttpServletRequest request){
+        Staff staff =new Staff();
+        Staff s = (Staff) session.getAttribute("staff");
+        staff.setId(s.getId());
+        session.setAttribute("staff",staffService.queryStaffs(staff).get(0));
+        //得到该员工职位
+        Post post=new Post();
+        post.setId(s.getPid());
+        //得到职位名
+        String pName = postService.queryPosts(post).get(0).getName();
+        Department department=new Department();
+        department.setId(postService.queryPosts(post).get(0).getDid());
+        //得到部门名
+        String dName = departmentService.queryDepartments(department).get(0).getName();
+        request.setAttribute("pName",pName);
+        request.setAttribute("dName",dName);
+        TrainTarget trainTarget=new TrainTarget();
+        Train train=new Train();
+        List<Train> ts=new ArrayList<>();
+        trainTarget.setSid(s.getId());
+        //得到培训
+        List<TrainTarget> trainTargets = trainTargetService.queryTrainTarget(trainTarget);
+        for (TrainTarget target : trainTargets) {
+            train.setId(target.getTrid());
+            List<Train> trains = trainService.queryTrains(train);
+            for (Train t : trains) {
+                if(t.getState()==1){
+                    ts.add(t);
+                }
+            }
+        }
+        request.setAttribute("ts",ts);
+        Pay pay=new Pay();
+        pay.setSid(s.getId());
+        request.setAttribute("pay",payService.queryPay(pay));
+        RewardsPunishment rewardsPunishment=new RewardsPunishment();
+        rewardsPunishment.setSid(s.getId());
+        request.setAttribute("rp",rewardPunishmentService.queryRewardPunishment(rewardsPunishment));
+        Clock clock=new Clock();
+        clock.setSid(s.getId());
+        request.setAttribute("clock",clockService.queryClock(clock));
+        return "staffInfo";
+    }
+
+    @RequestMapping("toCheckStaffInfo")
+    public String toCheckStaffInfo(Integer id,HttpServletRequest request){
+        Staff staff =new Staff();
+        staff.setId(id);
+        request.setAttribute("staff",staffService.queryStaffs(staff).get(0));
+        Post post=new Post();
+        post.setId(staffService.queryStaffs(staff).get(0).getPid());
+        String pName = postService.queryPosts(post).get(0).getName();
+        Department department=new Department();
+        department.setId(postService.queryPosts(post).get(0).getDid());
+        String dName = departmentService.queryDepartments(department).get(0).getName();
+        request.setAttribute("pName",pName);
+        request.setAttribute("dName",dName);
+        TrainTarget trainTarget=new TrainTarget();
+        Train train=new Train();
+        List<Train> ts=new ArrayList<>();
+        trainTarget.setSid(id);
+        List<TrainTarget> trainTargets = trainTargetService.queryTrainTarget(trainTarget);
+        for (TrainTarget target : trainTargets) {
+            train.setId(target.getTrid());
+            List<Train> trains = trainService.queryTrains(train);
+            for (Train t : trains) {
+                if(t.getState()==1){
+                    ts.add(t);
+                }
+            }
+        }
+        request.setAttribute("ts",ts);
+        Pay pay=new Pay();
+        pay.setSid(id);
+        request.setAttribute("pay",payService.queryPay(pay));
+        RewardsPunishment rewardsPunishment=new RewardsPunishment();
+        rewardsPunishment.setSid(id);
+        request.setAttribute("rp",rewardPunishmentService.queryRewardPunishment(rewardsPunishment));
+        Clock clock=new Clock();
+        clock.setSid(id);
+        request.setAttribute("clock",clockService.queryClock(clock));
+        return "checkStaffInfo";
+    }
+
+    @RequestMapping("toAdminSM")
+    public String toAdminSM(HttpServletRequest request){
+        List<Department> departments = departmentService.queryDepartments(new Department());
+        Post post=new Post();
+        post.setDid(departments.get(0).getId());
+        List<Post> posts = postService.queryPosts(post);
+        request.setAttribute("departments",departments);
+        request.setAttribute("posts",posts);
+        Staff staff=new Staff();
+        staff.setPid(posts.get(0).getId());
+        List<Staff> staffs = staffService.queryStaffs(staff);
+        request.setAttribute("staffs",staffs);
+        return "adminSM";
     }
 
     @RequestMapping("/login")

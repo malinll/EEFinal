@@ -115,11 +115,11 @@
     </style>
     <script src="js/jquery-3.1.0.js"></script>
     <script>
-        $(function () {
+        /*$(function () {
             $("#addr").click(function () {
                 $("#ar").css("display","block");
             })
-        })
+        })*/
     </script>
 </head>
 <body>
@@ -127,7 +127,8 @@
     <div class="head-main">
         <div class="head-menu">
             <div class="login" style="opacity: 0.8;">
-                欢迎 ${sessionScope.visitor.name} 来到阿里巴巴集团招聘！
+                欢迎 ${sessionScope.visitor.name} 来到阿里巴巴集团招聘！|
+                <a href="logout">退出</a>
             </div>
             <ul id="menu">
                 <li >
@@ -146,7 +147,7 @@
         <i style="float:left;color:white;font-style:normal;font-size:14px;line-height:54px;opacity: 0.8;">招聘官网</i>
     </div>
 </div>
-    <div class="container" style="max-width: 1100px;margin-top: 50px;">
+    <div class="container" style="max-width: 1100px;margin-top: 5px;">
         <%--<div class="row">--%>
             <div class="col-sm-2">
                 <div class="list-group side-bar">
@@ -162,7 +163,7 @@
             </div>
             <div class="col-sm-10">
                 <%--新增简历界面--%>
-                <form action="addResume" method="post" id="ar" style="display: none">
+                <%--<form action="addResume" method="post" id="ar" style="display: none">
                     <table>
                         <tr>
                             <th colspan="2">个&emsp;人&emsp;简&emsp;历</th>
@@ -200,45 +201,101 @@
                     </table>
                     <input type="hidden" name="vid" value=${sessionScope.visitor.id}>
                     <input type="submit" value="提交简历">
-                </form>
+                </form>--%>
 
-                <form class="container" action="addResume" method="post">
-                    <h3>个人简历</h3>
+                <form action="addResume" method="post">
                     <br/>
-                    <div class="form-inline">
-                        <div class="form-group">
-                            <div class="col-sm-4">
+                    <%--<div class="form-inline">--%>
+                        <div class="col-sm-6">
+                            <div class="form-group">
                                 <label>姓&emsp;名：</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <input name="name" class="form-control">
+                                <input name="name" class="form-control" required maxlength="5">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-4">
+                        <div class="col-sm-6">
+                            <div class="form-group">
                                 <label>性&emsp;别：</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <input type="radio" class="form-control" name="gender" value="男">男/
-                                <input type="radio" class="form-control" name="gender" value="女">女
+                                <select class="form-control" name="gender">
+                                    <option hidden></option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-inline">
+                    <%--</div>--%>
+                    <%--<div class="form-inline">--%>
+                        <div class="col-sm-6">
                         <div class="form-group">
                             <label>生&emsp;日：</label>
-                            <input type="date" class="form-control" name="birth"/>
+                            <input type="date" class="form-control" name="birth" max="2000-01-01"/>
                         </div>
+                        </div>
+                        <div class="col-sm-6">
                         <div class="form-group">
                             <label>民&emsp;族：</label>
-                            <input class="form-control" name="nation"/>
+                            <input class="form-control" name="nation" required maxlength="5"/>
                         </div>
-
+                        </div>
+                    <%--</div>--%>
+                        <%--<div class="form-inline">--%>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>籍&emsp;贯：</label>
+                                    <input class="form-control" name="nativePlace" required maxlength="5"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>手机号：</label>
+                                    <input class="form-control" type="number" name="phone" min="13100000000" max="18999999999" required/>
+                                </div>
+                            </div>
+                        <%--</div>--%>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>学&emsp;历：</label>
+                            <input class="form-control" name="education" required maxlength="5"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>专&emsp;业：</label>
+                            <input class="form-control" name="major" required maxlength="5"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>地&emsp;址：</label>
+                            <input class="form-control" name="address" required maxlength="10"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>邮&emsp;箱：</label>
+                            <input class="form-control" name="email" required maxlength="20"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>技能特长：</label>
+                            <textarea class="form-control" name="skills" maxlength="100" style="height: 90px;resize: none"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>个人评价：</label>
+                            <textarea class="form-control" name="assessment" maxlength="100" style="height: 90px;resize: none"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <input type="hidden" name="vid" value=${sessionScope.visitor.id}>
+                            <input type="submit" class="form-control btn btn-primary" value="提交简历">
+                        </div>
                     </div>
                 </form>
             </div>
         <%--</div>--%>
     </div>
-
 </body>
 </html>

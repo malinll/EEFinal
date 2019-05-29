@@ -1,6 +1,8 @@
 package com.project.eefinal.model;
 
-public class TrainTarget {
+import java.io.Serializable;
+
+public class TrainTarget implements Serializable {
     private Integer id;
     private Integer trid;
     private Integer sid;

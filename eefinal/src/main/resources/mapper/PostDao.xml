@@ -9,8 +9,16 @@
         update T_POST set P_NAME=#{name} where P_ID=#{id}
     </update>
 
-    <delete id="delPost" parameterType="integer">
-        delete from T_POST where P_ID=#{id}
+    <delete id="delPost" parameterType="com.project.eefinal.model.Post">
+        delete from T_POST
+        <where>
+            <if test="id!=null">
+                P_ID=#{id}
+            </if>
+            <if test="did!=null">
+                and P_DID=#{did}
+            </if>
+        </where>
     </delete>
 
     <select id="queryPosts" parameterType="com.project.eefinal.model.Post" resultMap="PostMap">

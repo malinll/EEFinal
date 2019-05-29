@@ -1,8 +1,9 @@
 package com.project.eefinal.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class RewardsPunishment {
+public class RewardsPunishment implements Serializable {
     private Integer id;
     private Integer sid;
     private Date time;

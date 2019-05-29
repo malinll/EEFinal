@@ -1,6 +1,8 @@
 package com.project.eefinal.model;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable {
     private Integer id;
     private String name;
     private Integer did;

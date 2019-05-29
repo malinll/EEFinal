@@ -2,10 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project.eefinal.dao.PayDao">
     <insert id="addPay" parameterType="com.project.eefinal.model.Pay">
-
+        insert into T_PAY values (PAY_SEQ.nextval,#{sid},#{money},#{tax},#{overtime},#{rp},#{time},#{total})
     </insert>
     <select id="queryPay" parameterType="com.project.eefinal.model.Pay" resultMap="PayMap">
-
+        select * from T_PAY
+        <where>
+            <if test="id!=null">
+                PAY_ID=#{id}
+            </if>
+            <if test="sid!=null">
+                and PAY_SID=#{sid}
+            </if>
+        </where>
     </select>
     <resultMap id="PayMap" type="com.project.eefinal.model.Pay">
         <id property="id" column="PAY_ID"/>

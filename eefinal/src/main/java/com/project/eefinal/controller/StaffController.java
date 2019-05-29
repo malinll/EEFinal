@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -131,5 +132,40 @@ public class StaffController {
         }
         clockService.addClock(clock);
         return "forward:toClock";
+    }
+
+    @RequestMapping("updateStaff")
+    public String updateStaff(Staff staff){
+        staffService.updateStaff(staff);
+        return "forward:toStaffInfo";
+    }
+
+    @RequestMapping("queryClockByMonth")
+    @ResponseBody
+    public List<Clock> queryClockByMonth(int month,HttpSession session){
+        Staff staff = (Staff) session.getAttribute("staff");
+        Clock clock=new Clock();
+        clock.setSid(staff.getId());
+        List<Clock> clocks = clockService.queryClock(clock);
+        List<Clock> cs=new ArrayList<>();
+        Calendar cal=Calendar.getInstance();
+        for (Clock c : clocks) {
+            cal.setTime(c.getTime());
+            if(cal.get(Calendar.MONTH)==month-1){
+                cs.add(c);
+            }
+        }
+        return cs;
+    }
+
+    @RequestMapping("reconsider")
+    public String reconsider(RewardsPunishment rewardsPunishment,HttpSession session){
+        List<RewardsPunishment> rps= (List<RewardsPunishment>) session.getAttribute("reconsider");
+        if(rps==null){
+            rps=new ArrayList<>();
+        }
+        rps.add(rewardsPunishment);
+        session.setAttribute("reconsider",rps);
+        return "forward:toStaffInfo";
     }
 }

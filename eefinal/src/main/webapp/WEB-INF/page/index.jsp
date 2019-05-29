@@ -202,7 +202,8 @@
                             <a href="toRegister">注册</a>
                         </c:when>
                         <c:otherwise>
-                            欢迎 ${sessionScope.visitor.name} 来到阿里巴巴集团招聘！
+                            欢迎 ${sessionScope.visitor.name} 来到阿里巴巴集团招聘！|
+                            <a href="logout">退出</a>
                         </c:otherwise>
                     </c:choose>
                 </div>

@@ -11,7 +11,7 @@
             <if test="id!=null">
                 and C_ID=#{id}
             </if>
-            <if test="id!=null">
+            <if test="sid!=null">
                 and C_SID=#{sid}
             </if>
             <if test="loe!=null">

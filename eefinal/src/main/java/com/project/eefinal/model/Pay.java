@@ -1,16 +1,17 @@
 package com.project.eefinal.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Pay {
+public class Pay implements Serializable {
     private Integer id;
     private Integer sid;
-    private Integer money;
-    private Integer tax;
+    private Double money;
+    private Double tax;
     private Integer overtime;
     private Integer rp;
-    private Date time;
-    private Integer total;
+    private String time;
+    private Double total;
 
     public Pay() {
     }
@@ -31,19 +32,19 @@ public class Pay {
         this.sid = sid;
     }
 
-    public Integer getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(Integer money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 
-    public Integer getTax() {
+    public Double getTax() {
         return tax;
     }
 
-    public void setTax(Integer tax) {
+    public void setTax(Double tax) {
         this.tax = tax;
     }
 
@@ -63,19 +64,19 @@ public class Pay {
         this.rp = rp;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-    public Integer getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 }

@@ -16,16 +16,9 @@
 <head>
     <base href="<%=basePath%>"/>
     <title>部门管理</title>
-    <style>
-        th,td{
-            width: 250px;
-            text-align: center;
-        }
-        input{
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="js/jquery-3.1.0.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(function () {
             $("#updateDep").change(function () {
@@ -36,195 +29,130 @@
                     }
                 })
             })
-
-            $("#dep").change(function () {
-                $.get("queryPostsByDep",{"did":$(this).val()},function (obj) {
-                    $("#post option").remove();
-                    for(var i in obj){
-                        $("#post").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
-                    }
-                    $.get("queryStaffsByPost",{"pid":obj[0]['id']},function (o) {
-                        $("#staff option").remove();
-                        $("#state").empty();
-                        for(var i in o){
-                            $("#staff").append("<option value='"+o[i]['id']+"'>"+o[i]['name']+"</option>")
-                        }
-                        if(o[0]['state']==0){
-                            $("#state").html("试用<a href='changeState?id="+o[0]['id']+"'>转正</a>");
-                        }else if(o[0]['state']==1){
-                            $("#state").html("在职<a href='fire?id="+o[0]['id']+"'>辞退</a>");
-                        }else {
-                            $("#state").text("离职");
-                        }
-                    })
-                })
-            })
-
-            $("#post").change(function () {
-                $.get("queryStaffsByPost",{"pid":$(this).val()},function (obj) {
-                    $("#staff option").remove();
-                    $("#state").empty();
-                    for(var i in obj){
-                        $("#staff").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
-                    }
-                    if(obj[0]['state']==0){
-                        $("#state").html("试用<a href='changeState?id="+obj[0]['id']+"'>转正</a>");
-                    }else if(obj[0]['state']==1){
-                        $("#state").html("在职<a href='fire?id="+obj[0]['id']+"'>辞退</a>");
-                    }else {
-                        $("#state").text("离职");
-                    }
-                })
-            })
-
-            $("#staff").change(function () {
-                $.get("queryStaffById",{"id":$(this).val()},function (obj) {
-                    if(obj['state']==0){
-                        $("#state").html("试用<a href='changeState?id="+obj['id']+"'>转正</a>");
-                    }else if(obj['state']==1){
-                        $("#state").html("在职<a href='fire?id="+obj['id']+"'>辞退</a>");
-                    }else {
-                        $("#state").text("离职");
-                    }
-                })
-            })
-
-            $("#cDep").change(function () {
-                $.get("queryPostsByDep",{"did":$(this).val()},function (obj) {
-                    $("#cPost option").remove();
-                    for(var i in obj){
-                        $("#cPost").append("<option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option>")
-                    }
-                })
-            })
         })
     </script>
 </head>
 <body>
-    <a href="javascript:void(0)">新增部门</a> |
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">管理员界面</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="toAdminMain">招聘相关</a></li>
+                <li class="active"><a href="toAdminDep">部门管理</a> </li>
+                <li><a href="toAdminSM">员工管理</a></li>
+                <li><a href="toAdminPay">薪资结算</a></li>
+                <li><a href="toTrain">培训事宜</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<%--    <a href="javascript:void(0)">新增部门</a> |
     <a href="javascript:void(0)">查看部门</a> |
     <a href="javascript:void(0)">新增职位</a> |
-    <a href="javascript:void(0)">查看职位</a>
-    <fieldset>
-        <legend>新增部门</legend>
-        <form action="addDep" method="post">
-            部门名称：<input name="name" required>
-            <input type="submit" value="新增部门">
-        </form>
-    </fieldset>
-
-    <fieldset>
-        <legend>查看部门</legend>
-        <table>
-            <tr>
-                <th>部门编号</th>
-                <th>部门名称</th>
-                <th>创建时间</th>
-            </tr>
-            <c:forEach items="${requestScope.departments}" var="department">
+    <a href="javascript:void(0)">查看职位</a>--%>
+<div class="container" style="max-width: 1100px;">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8" style="margin-top: 20px">
+        <fieldset>
+            <legend>新增部门</legend>
+            <form action="addDep" method="post">
+                <div class="col-sm-6">
+                    部门名称：<input name="name" required class="form-control"  maxlength="5">
+                </div>
+                <div class="col-sm-6">
+                    &emsp;<input type="submit" value="新增部门" class="form-control btn btn-primary">
+                </div>
+            </form>
+        </fieldset>
+        <br/><br/>
+        <fieldset>
+            <legend>查看部门</legend>
+            <%--<table>
                 <tr>
+                    <th>部门编号</th>
+                    <th>部门名称</th>
+                    <th>创建时间</th>
+                </tr>--%>
+                <c:forEach items="${requestScope.departments}" var="department">
                     <form action="updateDep" method="post">
-                        <td>${department.id}</td>
-                        <td><input name="name" value=${department.name}></td>
-                        <td><fmt:formatDate value="${department.date}" pattern="yyyy年MM月dd日 HH:mm:ss"/></td>
-                        <td>
+                            <%--<div class="col-sm-6">
+                                部门编号：
+                                <input value="${department.id}" class="form-control" readonly>
+                            </div>--%>
+                        <div class="col-sm-3">
+                            部门名称：
+                            <input name="name" value=${department.name} class="form-control" required maxlength="5">
+                        </div>
+                        <div class="col-sm-5">
+                            创建时间：
+                            <input value="<fmt:formatDate value="${department.date}" pattern="yyyy年MM月dd日 HH:mm:ss"/>" class="form-control" readonly>
+                        </div>
+                        <div class="col-sm-2">
+                            &emsp;<a href="delDep?id=${department.id}" class="btn btn-danger btn-block">删除部门</a>
+                        </div>
+                        <div class="col-sm-2">
                             <input type="hidden" name="id" value=${department.id}>
-                            <input type="submit" value="修改部门名称">
-                        </td>
-                        <td><a href="delDep?id=${department.id}">删除部门</a></td>
+                            &emsp;<input type="submit" value="修改部门" class="form-control btn btn-warning"></div>
                     </form>
-                </tr>
-            </c:forEach>
-        </table>
-    </fieldset>
-    <fieldset>
-        <legend>新增职位</legend>
-        <form action="addPost" method="post">
-            选择部门：
-            <select name="did">
-                <c:forEach items="${requestScope.departments}" var="department">
-                    <option value=${department.id}>${department.name}</option>
                 </c:forEach>
-            </select>
-            请输入职位名：<input name="name">
-            <input type="submit" value="新增职务">
-        </form>
-    </fieldset>
-    <fieldset>
-        <legend>查看职位</legend>
-        <form action="updatePost" method="post" id="checkPost">
-            选择部门：
-            <select name="did" id="updateDep">
-                <c:forEach items="${requestScope.departments}" var="department">
-                    <option value=${department.id}>${department.name}</option>
-                </c:forEach>
-            </select>
-            选择职位：
-            <select name="id" id="updatePost">
-                <c:forEach items="${requestScope.posts}" var="post">
-                    <option value=${post.id}>${post.name}</option>
-                </c:forEach>
-            </select>
-            修改后职位名：<input name="name">
-            <input type="submit" value="修改职位">
-            <input type="submit" formaction="delPost" value="删除职位">
-        </form>
-    </fieldset>
-    <fieldset>
-        <legend>更改员工状态</legend>
-        选择部门：
-        <select id="dep">
-            <c:forEach items="${requestScope.departments}" var="department">
-                <option value=${department.id}>${department.name}</option>
-            </c:forEach>
-        </select>
-        <br/>
-        选择职位：
-        <select id="post">
-            <c:forEach items="${requestScope.posts}" var="post">
-                <option value=${post.id}>${post.name}</option>
-            </c:forEach>
-        </select>
-        <br/>
-        <form action="changePost" method="post">
-            查看员工：
-            <select id="staff" name="id">
-                <c:forEach items="${requestScope.staffs}" var="staff">
-                    <option value=${staff.id}>${staff.name}</option>
-                </c:forEach>
-            </select>
-            <br/>
-            换岗部门：
-            <select id="cDep">
-                <c:forEach items="${requestScope.departments}" var="department">
-                    <option value=${department.id}>${department.name}</option>
-                </c:forEach>
-            </select>
-            换岗职位：
-            <select id="cPost" name="pid">
-                <c:forEach items="${requestScope.posts}" var="post">
-                    <option value=${post.id}>${post.name}</option>
-                </c:forEach>
-            </select>
-            <input type="submit" value="换岗">
-        </form>
-        <br/>
-        <p>
-            员工状态：
-            <span id="state">
-            <c:choose>
-                <c:when test="${requestScope.staffs[0].state}==0">
-                    试用<a href="changeState?id=${requestScope.staffs[0].id}">转正</a>
-                </c:when>
-                <c:when test="${requestScope.staffs[0].state}==1">
-                    在职<a href="fire?id=${requestScope.staffs[0].id}">辞退</a>
-                </c:when>
-                <c:when test="${requestScope.staffs[0].state}==2">
-                    离职
-                </c:when>
-            </c:choose>
-            </span>
-        </p>
-    </fieldset>
+            <%--</table>--%>
+        </fieldset>
+        <br/><br/>
+        <fieldset>
+            <legend>新增职位</legend>
+            <form action="addPost" method="post">
+                <div class="col-sm-4">
+                    选择部门：
+                    <select name="did" class="form-control">
+                        <c:forEach items="${requestScope.departments}" var="department">
+                            <option value=${department.id}>${department.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    请输入职位名：<input name="name" class="form-control" required maxlength="5">
+                </div>
+                <div class="col-sm-4">
+                    &emsp;<input type="submit" value="新增职务" class="form-control btn btn-primary">
+                </div>
+            </form>
+        </fieldset>
+        <br/><br/>
+        <fieldset>
+            <legend>查看职位</legend>
+            <form action="updatePost" method="post" id="checkPost">
+                <div class="col-sm-4">
+                    选择部门：
+                    <select name="did" id="updateDep" class="form-control">
+                        <c:forEach items="${requestScope.departments}" var="department">
+                            <option value=${department.id}>${department.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    选择职位：
+                    <select name="id" id="updatePost" class="form-control">
+                        <c:forEach items="${requestScope.posts}" var="post">
+                            <option value=${post.id}>${post.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    修改后职位名：<input name="name" class="form-control" maxlength="5">
+                </div>
+                <div class="col-sm-6">
+                    &emsp;<input type="submit" formaction="delPost" value="删除职位" class="form-control btn btn-danger">
+                </div>
+                <div class="col-sm-6">
+                    &emsp;<input type="submit" value="修改职位" class="form-control btn btn-warning">
+                </div>
+            </form>
+        </fieldset>
+    </div>
+    <div class="col-sm-2"></div>
+</div>
 </body>
 </html>

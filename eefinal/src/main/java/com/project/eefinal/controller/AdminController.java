@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +34,12 @@ public class AdminController {
     private TrainTargetService trainTargetService;
     @Resource
     private StaffService staffService;
+    @Resource
+    private PayService payService;
+    @Resource
+    private RewardPunishmentService rewardPunishmentService;
+    @Resource
+    private ClockService clockService;
 
     @RequestMapping("adminLogin")
     public String adminLogin(String name, String pass, HttpServletRequest request){
@@ -128,15 +136,35 @@ public class AdminController {
     @RequestMapping("addDep")
     public String addDep(Department department){
         //重名判断
-        department.setDate(new Date());
-        departmentService.addDepartment(department);
+        boolean flag=true;
+        List<Department> departments = departmentService.queryDepartments(new Department());
+        for (Department d : departments) {
+            if(department.getName().equals(d.getName())){
+                flag=false;
+                break;
+            }
+        }
+        if(flag){
+            department.setDate(new Date());
+            departmentService.addDepartment(department);
+        }
         return "forward:toAdminDep";
     }
 
     @RequestMapping("updateDep")
     public String updateDep(Department department){
         //重名判断
-        departmentService.updateDepartment(department);
+        boolean flag=true;
+        List<Department> departments = departmentService.queryDepartments(new Department());
+        for (Department d : departments) {
+            if(department.getName().equals(d.getName())){
+                flag=false;
+                break;
+            }
+        }
+        if(flag){
+            departmentService.updateDepartment(department);
+        }
         return "forward:toAdminDep";
     }
 
@@ -156,6 +184,7 @@ public class AdminController {
         }
         if(flag){
             departmentService.delDepartemnt(id);
+            postService.delPost(post);
         }
         return "forward:toAdminDep";
     }
@@ -163,14 +192,34 @@ public class AdminController {
     @RequestMapping("addPost")
     public String addPost(Post post){
         //重名判断
-        postService.addPost(post);
+        boolean flag=true;
+        List<Post> posts = postService.queryPosts(new Post());
+        for (Post p : posts) {
+            if(post.getName().equals(p.getName())){
+                flag=false;
+                break;
+            }
+        }
+        if(flag) {
+            postService.addPost(post);
+        }
         return "forward:toAdminDep";
     }
 
     @RequestMapping("updatePost")
     public String updatePost(Post post){
         //重名判断
-        postService.updatePost(post);
+        boolean flag=true;
+        List<Post> posts = postService.queryPosts(new Post());
+        for (Post p : posts) {
+            if(post.getName().equals(p.getName())){
+                flag=false;
+                break;
+            }
+        }
+        if(flag) {
+            postService.updatePost(post);
+        }
         return "forward:toAdminDep";
     }
 
@@ -178,8 +227,10 @@ public class AdminController {
     public String delPost(Integer id){
         Staff staff=new Staff();
         staff.setPid(id);
+        Post post=new Post();
         if(staffService.queryStaffs(staff)==null){
-            postService.delPost(id);
+            post.setId(id);
+            postService.delPost(post);
         }
         return "forward:toAdminDep";
     }
@@ -271,6 +322,15 @@ public class AdminController {
         return "forward:toTrain";
     }
 
+    @RequestMapping("delTrain")
+    public String delTrain(Integer id){
+        trainService.delTrain(id);
+        TrainTarget trainTarget=new TrainTarget();
+        trainTarget.setTrid(id);
+        trainTargetService.delTrainTarget(trainTarget);
+        return "forward:toTrain";
+    }
+
     @RequestMapping("updateTrain")
     public String updateTrain(Train train,String datetime,Integer[] staff) {
         train.setState(1);
@@ -304,21 +364,70 @@ public class AdminController {
 
     @RequestMapping("changeState")
     public String changeState(Staff staff){
-        staff.setState(1);
-        staffService.updateStaff(staff);
-        return "forward:toAdminDep";
+        if(staff.getId()!=null){
+            staff.setState(1);
+            staffService.updateStaff(staff);
+        }
+        return "forward:toAdminSM";
     }
 
     @RequestMapping("fire")
     public String fire(Staff staff){
-        staff.setState(2);
-        staffService.updateStaff(staff);
-        return "forward:toAdminDep";
+        if(staff.getId()!=null){
+            staff.setState(2);
+            staffService.updateStaff(staff);
+        }
+        return "forward:toAdminSM";
     }
 
     @RequestMapping("changePost")
     public String changePost(Staff staff){
         staffService.updateStaff(staff);
-        return "forward:toAdminDep";
+        return "forward:toAdminSM";
+    }
+
+    @RequestMapping("payoff")
+    public String payoff(Pay pay){
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        pay.setTime(year+"-"+month);
+        payService.addPay(pay);
+        return "forward:toAdminPay";
+    }
+
+    @RequestMapping("agreeReconsider")
+    public String agreeReconsider(RewardsPunishment rewardsPunishment, Integer index, HttpSession session){
+        List<RewardsPunishment> rps = (List<RewardsPunishment>) session.getAttribute("reconsider");
+        int i=index;
+        rps.remove(i);
+        session.setAttribute("reconsider",rps);
+        rewardsPunishment.setTime(new Date());
+        rewardPunishmentService.addRewardPunishment(rewardsPunishment);
+        return "forward:toAdminPay";
+    }
+
+    @RequestMapping("queryClockByMonth2")
+    @ResponseBody
+    public List<Clock> queryClockByMonth2(int month,int id){
+        Clock clock=new Clock();
+        clock.setSid(id);
+        List<Clock> clocks = clockService.queryClock(clock);
+        List<Clock> cs=new ArrayList<>();
+        Calendar cal=Calendar.getInstance();
+        for (Clock c : clocks) {
+            cal.setTime(c.getTime());
+            if(cal.get(Calendar.MONTH)==month-1){
+                cs.add(c);
+            }
+        }
+        return cs;
+    }
+
+
+    @RequestMapping("addRP")
+    public String addRP(RewardsPunishment rewardsPunishment){
+        rewardsPunishment.setTime(new Date());
+        rewardPunishmentService.addRewardPunishment(rewardsPunishment);
+        return "forward:toAdminSM";
     }
 }

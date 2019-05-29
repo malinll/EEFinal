@@ -20,7 +20,16 @@
                 S_PID=#{pid},
             </if>
             <if test="state!=null">
-                S_STATE=#{state}
+                S_STATE=#{state},
+            </if>
+            <if test="phone!=null">
+                S_PHONE=#{phone},
+            </if>
+            <if test="address!=null">
+                S_ADDRESS=#{address},
+            </if>
+            <if test="email!=null">
+                S_EMAIL=#{email}
             </if>
         </set>
         where S_ID=#{id}
@@ -43,6 +52,9 @@
             </if>
             <if test="phone!=null">
                 and S_PHONE=#{phone}
+            </if>
+            <if test="state!=null">
+                and S_STATE=#{state}
             </if>
         </where> 
     </select>

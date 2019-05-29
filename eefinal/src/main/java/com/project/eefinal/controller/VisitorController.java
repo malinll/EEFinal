@@ -35,6 +35,12 @@ public class VisitorController {
        }
     }
 
+    @RequestMapping("logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("visitor");
+        return "forward:/";
+    }
+
     @RequestMapping("/register")
     public String register(Visitor visitor){
         if(visitorService.addVisitor(visitor)){

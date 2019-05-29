@@ -17,8 +17,8 @@ public class PostService {
         return postDao.addPost(post);
     }
 
-    public boolean delPost(Integer id){
-        return postDao.delPost(id);
+    public boolean delPost(Post post){
+        return postDao.delPost(post);
     }
 
     public boolean updatePost(Post post){

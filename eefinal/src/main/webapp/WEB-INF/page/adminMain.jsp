@@ -15,13 +15,9 @@
 <head>
     <base href="<%=basePath%>"/>
     <title>管理员主页</title>
-    <style>
-        th,td{
-            width: 300px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="js/jquery-3.1.0.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(function () {
             $("#dep").change(function () {
@@ -46,59 +42,84 @@
     </script>
 </head>
 <body>
-    <a href="javascript:void(0)">招聘相关</a> |
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">管理员界面</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="toAdminMain">招聘相关</a></li>
+                <li><a href="toAdminDep">部门管理</a> </li>
+                <li><a href="toAdminSM">员工管理</a></li>
+                <li><a href="toAdminPay">薪资结算</a></li>
+                <li><a href="toTrain">培训事宜</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+    <%--<a href="javascript:void(0)">招聘相关</a> |
     <a href="toAdminDep">部门管理</a> |
     <a href="toAdminPay">薪资结算</a> |
     <a href="toTrain">培训事宜</a> |
     <a href="#">员工奖惩</a> |
     <a href="#">考勤统计</a>
     <hr/>
-    <br/>
-    <div id="recruit">
+    <br/>--%>
+<div class="container" style="max-width: 1100px;">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8" style="margin-top: 20px">
         <fieldset>
             <legend>应聘简历</legend>
-            <table>
-                <tr>
-                    <th>招聘公司</th>
-                    <th>招聘职位</th>
-                    <th>应聘人姓名</th>
-                    <th>招聘状态/操作</th>
-                </tr>
-                <c:forEach items="${requestScope.interviews}" var="interview" varStatus="s">
-                    <c:if test="${interview.getState()<10}">
-                        <tr>
-                            <td>${requestScope.recruitments[s.index].getCompany()}</td>
-                            <td>${requestScope.recruitments[s.index].getJob()}</td>
-                            <td>${requestScope.resumes[s.index].name}</td>
-                            <td>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>招聘公司</th>
+                        <th>招聘职位</th>
+                        <th>应聘人姓名</th>
+                        <th>招聘状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${requestScope.interviews}" var="interview" varStatus="s">
+                        <c:if test="${interview.getState()<10}">
+                            <tr>
+                                <td>${requestScope.recruitments[s.index].getCompany()}</td>
+                                <td>${requestScope.recruitments[s.index].getJob()}</td>
+                                <td>${requestScope.resumes[s.index].name}</td>
+
                                 <c:choose>
                                     <c:when test="${interview.getState()==0}">
-                                        <c:out value="待查看"/>
-                                        <a href="adminCheckResume?iid=${interview.id}&resid=${interview.resid}">查看简历</a>
+                                        <td><c:out value="待查看"/></td>
+                                        <td><a href="adminCheckResume?iid=${interview.id}&resid=${interview.resid}">查看简历</a></td>
                                     </c:when>
                                     <c:when test="${interview.getState()==1}">
-                                        <c:out value="待邀请"/>
-                                        <a href="adminCheckResume?iid=${interview.id}&resid=${interview.resid}">面试与否</a>
+                                        <td><c:out value="待邀请"/></td>
+                                        <td><a href="adminCheckResume?iid=${interview.id}&resid=${interview.resid}">面试与否</a></td>
                                     </c:when>
                                     <c:when test="${interview.getState()==2}">
-                                        <c:out value="不合适"/>
+                                        <td><c:out value="不合适"/></td>
+                                        <td></td>
                                     </c:when>
                                 </c:choose>
-                            </td>
-                        </tr>
-                    </c:if>
-                </c:forEach>
+
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+                </tbody>
             </table>
-        </fieldset >
-        <br/><hr/><br/>
+        </fieldset>
+        <br/><br/>
         <fieldset>
             <legend>面试情况</legend>
-            <table>
+            <table class="table table-striped">
                 <tr>
                     <th>招聘公司</th>
                     <th>招聘职位</th>
                     <th>应聘人姓名</th>
-                    <th>招聘状态/操作</th>
+                    <th>招聘状态</th>
+                    <th>操作</th>
                 </tr>
                 <c:forEach items="${requestScope.interviews}" var="interview" varStatus="s">
                     <c:if test="${interview.getState()>10}">
@@ -106,143 +127,177 @@
                             <td>${requestScope.recruitments[s.index].getCompany()}</td>
                             <td>${requestScope.recruitments[s.index].getJob()}</td>
                             <td>${requestScope.resumes[s.index].name}</td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${interview.getState()==11}">
-                                        <c:out value="待确认"/>
-                                    </c:when>
-                                    <c:when test="${interview.getState()==12}">
-                                        <c:out value="不合适"/>
-                                    </c:when>
-                                    <c:when test="${interview.getState()==13}">
-                                        <c:out value="已确认"/>
-                                        录用与否&emsp;<a href="hire?iid=${interview.id}&resid=${interview.resid}&rid=${interview.rid}">是</a>/
-                                        <a href="interviewReject?iid=${interview.id}">否</a>
-                                    </c:when>
-                                    <c:when test="${interview.getState()==14}">
-                                        <c:out value="已取消"/>
-                                    </c:when>
-                                    <c:when test="${interview.getState()==15}">
-                                        <c:out value="已录用"/>
-                                    </c:when>
-                                </c:choose>
-                            </td>
+
+                            <c:choose>
+                                <c:when test="${interview.getState()==11}">
+                                    <td><c:out value="待确认"/></td>
+                                    <td></td>
+                                </c:when>
+                                <c:when test="${interview.getState()==12}">
+                                    <td><c:out value="不合适"/></td>
+                                    <td></td>
+                                </c:when>
+                                <c:when test="${interview.getState()==13}">
+                                    <td> <c:out value="已确认"/></td>
+                                    <td>
+                                        <a class="btn btn-success" href="hire?iid=${interview.id}&resid=${interview.resid}&rid=${interview.rid}">录用</a>
+                                        <a class="btn btn-danger" href="interviewReject?iid=${interview.id}">拒绝</a>
+                                    </td>
+                                </c:when>
+                                <c:when test="${interview.getState()==14}">
+                                    <td><c:out value="已取消"/></td>
+                                    <td></td>
+                                </c:when>
+                                <c:when test="${interview.getState()==15}">
+                                    <td><c:out value="已录用"/></td>
+                                    <td></td>
+                                </c:when>
+                            </c:choose>
                         </tr>
                     </c:if>
                 </c:forEach>
             </table>
         </fieldset>
-    </div>
-    <br/><hr/><br/>
-    <fieldset>
-        <legend>发布招聘</legend>
-        <form action="addRecruit" method="post">
-            选择部门：
-            <select name="did" id="dep">
-                <c:forEach items="${requestScope.departments}" var="department">
-                    <option value=${department.id}>${department.name}</option>
-                </c:forEach>
-            </select>
-            选择职位：
-            <select name="pid" id="post">
-                <c:forEach items="${requestScope.posts}" var="post">
-                    <c:if test="${post.did==requestScope.departments[0].id}">
-                        <option value=${post.id}>${post.name}</option>
+        <br/><br/>
+        <fieldset>
+            <legend>发布招聘</legend>
+            <form action="addRecruit" method="post">
+                <div class="col-sm-6">
+                    选择部门：
+                    <select name="did" id="dep" class="form-control">
+                        <c:forEach items="${requestScope.departments}" var="department">
+                            <option value=${department.id}>${department.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    选择职位：
+                    <select name="pid" id="post" class="form-control">
+                        <c:forEach items="${requestScope.posts}" var="post">
+                            <c:if test="${post.did==requestScope.departments[0].id}">
+                                <option value=${post.id}>${post.name}</option>
+                            </c:if>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    薪资：<input type="number" name="pay" class="form-control" required min="1" max="99999">
+                </div>
+                <div class="col-sm-6">
+                    地区：<input type="text" name="area" class="form-control" required maxlength="5">
+                </div>
+                <div class="col-sm-6">
+                    描述：<input type="text" name="description" class="form-control" required maxlength="100">
+                </div>
+                <div class="col-sm-6">
+                    要求：<input type="text" name="quality" class="form-control" required maxlength="100">
+                </div>
+                <div class="col-sm-6">
+                    &emsp;
+                    <input type="submit" class="form-control btn btn-primary" value="发布招聘">
+                </div>
+                <div class="col-sm-6">
+                    &emsp;
+                    <input type="submit" class="form-control btn btn-info" formaction="recruitDraft" value="保存草稿">
+                </div>
+            </form>
+        </fieldset>
+        <br/><br/>
+        <fieldset>
+            <legend>已发布招聘</legend>
+            <table class="table table-striped">
+                <tr>
+                    <th>部门</th>
+                    <th>职位</th>
+                    <th>薪资</th>
+                    <th>地区</th>
+                    <th>描述</th>
+                    <th>要求</th>
+                    <th>操作</th>
+                </tr>
+                <c:forEach items="${requestScope.rList}" var="r">
+                    <c:if test="${r.state==1}">
+                        <tr>
+                            <td>${r.company}</td>
+                            <td>${r.job}</td>
+                            <td>${r.pay}</td>
+                            <td>${r.area}</td>
+                            <td>${r.description}</td>
+                            <td>${r.quality}</td>
+                            <td><a href="repealRec?id=${r.id}" class="btn btn-warning">撤回</a></td>
+                        </tr>
                     </c:if>
                 </c:forEach>
-            </select>
-            薪资：<input type="number" name="pay">
-            地区：<input type="text" name="area" >
-            描述：<input type="text" name="description">
-            资质：<input type="text" name="quality">
-            <input type="submit" value="发布招聘">
-            <input type="submit" formaction="recruitDraft" value="保存草稿">
-        </form>
-    </fieldset>
-    <fieldset>
-        <legend>已发布招聘</legend>
-        <table>
-            <tr>
-                <th>部门</th>
-                <th>职位</th>
-                <th>薪资</th>
-                <th>地区</th>
-                <th>描述</th>
-                <th>要求</th>
-                <th>操作</th>
-            </tr>
-        <c:forEach items="${requestScope.rList}" var="r">
-            <c:if test="${r.state==1}">
+            </table>
+        </fieldset>
+        <br/><br/>
+        <fieldset>
+            <legend>招聘草稿箱</legend>
+            <%--<table class="table table-striped">
                 <tr>
-                    <td>${r.company}</td>
-                    <td>${r.job}</td>
-                    <td>${r.pay}</td>
-                    <td>${r.area}</td>
-                    <td>${r.description}</td>
-                    <td>${r.quality}</td>
-                    <td><a href="repealRec?id=${r.id}">撤回</a></td>
-                </tr>
-            </c:if>
-        </c:forEach>
-        </table>
-    </fieldset>
-
-    <fieldset>
-        <legend>招聘草稿箱</legend>
-        <table>
-            <tr>
-                <th>部门</th>
-                <th>职位</th>
-                <th>薪资</th>
-                <th>地区</th>
-                <th>描述</th>
-                <th>要求</th>
-                <th>操作</th>
-            </tr>
+                    <th>部门</th>
+                    <th>职位</th>
+                    <th>薪资</th>
+                    <th>地区</th>
+                    <th>描述</th>
+                    <th>要求</th>
+                    <th>操作</th>
+                </tr>--%>
             <c:forEach items="${requestScope.rList}" var="r">
                 <c:if test="${r.state==0}">
-                    <tr>
-                        <form action="delRec" method="post">
-                            选择职位：
-                            <td>
-                                <select name="did" class="updateRDep">
-                                    <c:forEach items="${requestScope.departments}" var="department">
-                                        <option value=${department.id}
-                                        <c:if test="${department.name.equals(r.company)}">
-                                            selected
-                                        </c:if>
-                                        >${department.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="pid" class="updateRPost">
+                    <form action="delRec" method="post" >
+                        <div class="col-sm-6">
+                            部门：
+                            <select name="did" class="updateRDep form-control">
+                                <c:forEach items="${requestScope.departments}" var="department">
+                                    <option value=${department.id}
+                                            <c:if test="${department.name.equals(r.company)}">
+                                                    selected
+                                    </c:if>
+                                    >${department.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            职位：
+                            <select name="pid" class="updateRPost form-control">
                                 <c:forEach items="${requestScope.posts}" var="post">
                                     <c:if test="${r.did==post.did}">
                                         <option value=${post.id}
-                                        <c:if test="${post.id==r.pid}">
+                                                <c:if test="${post.id==r.pid}">
                                                         selected
                                         </c:if>
                                         >${post.name}</option>
                                     </c:if>
                                 </c:forEach>
-                                </select>
-                            </td>
-
-                            <td><input type="number" name="pay" value="${r.pay}"></td>
-                            <td><input name="area" value="${r.area}"></td>
-                            <td><input name="description" value="${r.description}"></td>
-                            <td><input name="quality" value="${r.quality}"></td>
-                            <td>
-                                <input type="hidden" name="id" value="${r.id}">
-                                <input type="submit" value="删除">
-                                <input type="submit" formaction="updateRec" value="发布">
-                            </td>
-                        </form>
-                    </tr>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            薪资：<input type="number" name="pay" value="${r.pay}" class="form-control" min="1" max="99999">
+                        </div>
+                        <div class="col-sm-6">
+                            地区：<input name="area" value="${r.area}" class="form-control" maxlength="5">
+                        </div>
+                        <div class="col-sm-6">
+                            描述：<input name="description" value="${r.description}" class="form-control" maxlength="100">
+                        </div>
+                        <div class="col-sm-6">
+                            要求：<input name="quality" value="${r.quality}" class="form-control" maxlength="100">
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" name="id" value="${r.id}">
+                            &emsp;<input type="submit" value="删除" class="form-control btn btn-danger">
+                        </div>
+                        <div class="col-sm-6">
+                            &emsp;<input type="submit" formaction="updateRec" value="发布" class="form-control btn btn-primary">
+                        </div>
+                    </form>
                 </c:if>
             </c:forEach>
-        </table>
-    </fieldset>
+            <%--</table>--%>
+        </fieldset>
+    </div>
+    <div class="col-sm-2"></div>
+</div>
 </body>
 </html>
